@@ -35,16 +35,14 @@ app.get("/health-check", function (request, result) {
 });
 
 app.get("/activities", function (request, result) {
-  aqueries.getAllActivities((error, resultQuery) => {
-    if (error) {
-      result.send(error);
-    } else {
-      result.render("activities",{activities:resultQuery});
-    }
-  })
+    aqueries.getAllActivities((error, resultQuery) => {
+      if (error) {
+        result.send(error);
+      } else {
+        result.render("activities",{activities:resultQuery});
+      }
+    })
 });
-
-
 
 app.listen(port, function () {
   console.log("Server listening on port:" + port);
