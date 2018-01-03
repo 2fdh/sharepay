@@ -2,8 +2,14 @@
 
 {% block content %}
 
-  <div>
-  login page !  
-  </div>
+<div>
+  <form method="POST" action="/authenticate">
+  <input type="text" name="username" placeholder="Username" />
+  <input type="password" name="password" placeholder="Password"/>
+  <button type="submit">
+    Sign in!
+  </button>
+</form>
+</div>
 
 {% endblock %}
