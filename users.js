@@ -58,7 +58,11 @@ function isPgSslActive () {
 
 module.exports = {
   createUser : createUser,
+<<<<<<< HEAD
   getUser: getUser,
   findUser: findUser,
   findUserByEmail: findUserByEmail
+=======
+  getUser: getUser
+>>>>>>> add profile page
 }

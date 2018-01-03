@@ -30,13 +30,16 @@ app.get("/signup", function (request, result) {
 });
 
 app.get("/profiles/:profile_id", function (request, result) {
-  result.render("profile");
+  usersService.getUser(request.params.profile_id)
+    .then(res => result.render("profiles", {user: res.rows[0]}))
+    .catch(e => result.redirect("/signup"));
 });
 
 app.post("/create_user", function (request, result) {
   console.log(request.body);
-  usersService.createUser(request.body);
-  result.redirect("/profile");
+  usersService.createUser(request.body)
+    .then(res => result.redirect("/profiles/" + res.rows[0].id ))
+    .catch(e => console.log(e.stack));
 });
 
 app.get("/health-check", function (request, result) {
