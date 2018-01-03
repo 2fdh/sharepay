@@ -3,7 +3,7 @@ const PG = require("pg");
 function healthCheck(callback) {
   const client = new PG.Client({
   connectionString: process.env.DATABASE_URL,
-  ssl:true,
+  ssl: isPgSslActive(),
 });
   client.connect();
   client.query(
@@ -17,6 +17,14 @@ function healthCheck(callback) {
       client.end();
     }
   );
+}
+
+
+function isPgSslActive () {
+  if (process.env.SSLPG === "false") {
+    return false;
+  }
+  return true;
 }
 
 module.exports = {healthCheck:healthCheck};
