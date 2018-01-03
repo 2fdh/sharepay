@@ -35,9 +35,3 @@ jobs:
 
       # run tests!
       - run: npm test
-
-      deployment:
-  staging:
-    branch: develop
-    heroku:
-      appname: sharepay
