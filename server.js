@@ -2,6 +2,7 @@ const express = require("express");
 const utils = require("./utils.js");
 const nunjucks = require("nunjucks");
 const aqueries = require("./activities-queries.js");
+const usersService = require("./users.js")
 
 const app = express();
 
@@ -22,6 +23,20 @@ app.get("/", function (request, result) {
 
 app.get("/login", function (request, result) {
   result.render("login");
+});
+
+app.get("/signup", function (request, result) {
+  result.render("signup");
+});
+
+app.get("/profiles/:profile_id", function (request, result) {
+  result.render("profile");
+});
+
+app.post("/create_user", function (request, result) {
+  console.log(request.body);
+  usersService.createUser(request.body);
+  result.redirect("/profile");
 });
 
 app.get("/health-check", function (request, result) {

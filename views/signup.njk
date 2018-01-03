@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1 class="display-4">Sharepay</h1>
+  <p class="lead">A simple way to manage your activities</p>
+</div>
+
+  <div class="row">
+    <form method="POST" action="/create_user">
+      <div class="col-3 offset-6">
+        <input type="text" name="username" placeholder="Username" />
+        <input type="password" name="password" placeholder="Password"/>
+        <input type="firstname" name="firstname" placeholder="firstname"/>
+        <input type="lastname" name="lastname" placeholder="lastname"/>
+        <button type="submit" class="btn btn-primary">
+          Sign up!
+        </button>
+      </div>
+  </form>
+  </div>
+
+{% endblock %}
