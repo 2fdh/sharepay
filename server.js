@@ -1,17 +1,26 @@
 const express = require("express");
 const utils = require("./utils.js");
+const nunjucks = require("nunjucks");
 
 const app = express();
 
 const port = process.env.PORT || 3000;
 
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app
+});
+app.set("views", __dirname + "/views");
+app.set("view engine", "njk");
+
+app.use(require("body-parser").urlencoded({ extended: true }));
 
 app.get("/", function (request, result) {
-  result.send("OK!");
+  result.redirect("/login");
 });
 
-app.listen(port, function () {
-  console.log("Server listening on port:" + port);
+app.get("/login", function (request, result) {
+  result.render("login");
 });
 
 app.get("/health-check", function (request, result) {
@@ -22,4 +31,10 @@ app.get("/health-check", function (request, result) {
       result.send(resultQuery);
     }
   })
+});
+
+
+
+app.listen(port, function () {
+  console.log("Server listening on port:" + port);
 });
