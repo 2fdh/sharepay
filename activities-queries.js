@@ -1,13 +1,14 @@
 const PG = require("pg");
+const utils = require("./utils.js");
 
-function healthCheck(callback) {
+function getAllActivities(callback) {
   const client = new PG.Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: isPgSslActive(),
+  ssl: utils.isPgSslActive(),
 });
   client.connect();
   client.query(
-    "SELECT datname FROM pg_stat_activity",
+    "SELECT * FROM activities where status='Open'",
     function(error, resultQuery) {
       if (error) {
         callback(error);
@@ -19,13 +20,4 @@ function healthCheck(callback) {
   );
 }
 
-
-function isPgSslActive () {
-  if (process.env.SSLPG === "false") {
-    return false;
-  }
-  return true;
-}
-
-module.exports = {healthCheck:healthCheck,
-isPgSslActive : isPgSslActive};
+module.exports = {getAllActivities:getAllActivities};
