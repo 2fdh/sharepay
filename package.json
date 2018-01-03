@@ -4,6 +4,7 @@
   "description": "the best sharepay",
   "main": "server.js",
   "scripts": {
+    "start":"node server.js",
     "test": "jest --coverage"
   },
   "repository": {
