@@ -2,7 +2,7 @@ const utils = require("../utils.js")
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  user: 'user_test',
+  user: 'sharepay2dfh_test',
   host: 'localhost',
   database: 'sharepay2dfh_test',
   password: '',
