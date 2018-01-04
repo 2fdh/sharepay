@@ -29,20 +29,65 @@ function createActivity(form) {
 });
   client.connect();
   return client.query(
-    "INSERT INTO activities (id,title,description,status) VALUES ($1,$2,$3,$4)",
+    "INSERT INTO activities (id,title,description,status) VALUES ($1,$2,$3,$4) RETURNING id",
     [uuidv4(),form.title,form.description,"Open"]);
-    // [form.title,form.description],
-    // function(error, resultQuery) {
-    //   if (error) {
-    //     return error;
-    //   } else {
-    //     return resultQuery;
-    //   }
-    //  client.end();
-    }
+  }
+
+function addAttendees(form) {
+  const client = new PG.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: utils.isPgSslActive(),
+});
+  client.connect();
+  return client.query(
+    "INSERT INTO users (id,name,firstname,login,password) VALUES ($1,$2,$3,$4,$5) RETURNING id",
+    [uuidv4(),"toto",form.attendee,"toto","titi"]);
+  }
+
+function retrieveUserId(form){
+  const client = new PG.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: utils.isPgSslActive(),
+});
+  client.connect();
+  return client.query(
+    "select id from users where firstname=$1",
+    [form.attendee])
+}
+
+function retrieveActivityId(form){
+  const client = new PG.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: utils.isPgSslActive(),
+});
+  client.connect();
+  return client.query(
+    "select id from activities where title=$1 and description=$2",
+    [form.title,form.description])
+}
+
+function insertActivitiesUsers(form){
+  const client = new PG.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: utils.isPgSslActive(),
+});
+  Promise.all([
+    retrieveUserId(form),
+    retrieveActivityId(form)
+  ])
+  .then (function(promiseAllResult) {
+    client.connect();
+    return client.query(
+      "insert into activities_users Values ($1,$2,$3)",
+      [promiseAllResult[1].rows[0].id,promiseAllResult[0].rows[0].id,true]
+  )
+})
+}
 
 
 module.exports = {
   getAllActivities:getAllActivities,
-  createActivity:createActivity
+  createActivity:createActivity,
+  addAttendees:addAttendees,
+  insertActivitiesUsers:insertActivitiesUsers
 };

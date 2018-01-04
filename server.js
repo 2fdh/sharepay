@@ -122,12 +122,15 @@ app.get("/activities/create", function(request, result) {
 app.post(
     "/activities/create",
     function(request, result) {
-      aqueries.createActivity(request.body)
+      Promise.all([
+        aqueries.addAttendees(request.body),
+        aqueries.createActivity(request.body),
+        aqueries.insertActivitiesUsers(request.body)
+      ])
       .then(res => result.redirect("/activities"))
-      .catch();
-
+      .catch(err => console.warn(err));
     }
-  );
+)
 
 
 app.listen(port, function() {
