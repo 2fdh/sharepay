@@ -44,8 +44,22 @@ function createActivity(form, pool) {
 }
 
 
+function getActivityDetails(id) {
+  const client = new PG.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: utils.isPgSslActive(),
+  });
+  client.connect()
+  return client.query("SELECT * from activities where id = $1 ",
+    [id]
+  );
+
+}
+
+
 
 module.exports = {
   getAllActivities:getAllActivities,
-  createActivity:createActivity
+  createActivity:createActivity,
+  getActivityDetails:getActivityDetails
 };

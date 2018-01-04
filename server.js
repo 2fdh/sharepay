@@ -107,6 +107,10 @@ app.get("/health-check", function (request, result) {
   })
 });
 
+app.get("/activities/create", function(request, result) {
+  result.render("activity_create");
+});
+
 app.get("/activities", function(request, result) {
   aqueries.getAllActivities(pool, (error, resultQuery) => {
     if (error) {
@@ -119,9 +123,18 @@ app.get("/activities", function(request, result) {
   })
 });
 
-app.get("/activities/create", function(request, result) {
-  result.render("activity_create");
+app.get("/activities/:id", function(request, result) {
+  aqueries.getActivityDetails(request.params.id)
+  .then( res => result.render("activity_details",{
+    activity_id:res.rows[0].id,
+    activity_title:res.rows[0].title,
+    activity_description:res.rows[0].description,
+    activity_status:res.rows[0].status
+  }));
 });
+
+
+
 
 app.post(
     "/activities/create",
