@@ -1,4 +1,3 @@
-// const PG = require("pg");
 const uuidv4 = require('uuid/v4');
 const sha256 = require('js-sha256');
 

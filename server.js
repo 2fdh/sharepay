@@ -115,11 +115,15 @@ app.get("/health-check", function(request, result) {
   })
 });
 
-app.get("/activities/create", function(request, result) {
+app.get("/activities/create",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
   result.render("activity_create");
 });
 
-app.get("/activities", function(request, result) {
+app.get("/activities",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
   aqueries.getAllActivities(pool, (error, resultQuery) => {
     if (error) {
       result.send(error);
@@ -131,7 +135,9 @@ app.get("/activities", function(request, result) {
   })
 });
 
-app.get("/activities/:id", function(request, result) {
+app.get("/activities/:id",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
   aqueries.getActivityDetails(request.params.id, pool)
     .then(res => result.render("activity_details", {
       activity_id: res.rows[0].id,
@@ -142,10 +148,9 @@ app.get("/activities/:id", function(request, result) {
 });
 
 
-
-
 app.post(
   "/activities/create",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
     aqueries.createActivity(request.body, pool)
       .then(res => result.redirect("/activities"))

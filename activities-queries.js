@@ -1,4 +1,3 @@
-// const PG = require("pg");
 const utils = require("./utils.js");
 const uuidv4 = require('uuid/v4');
 
