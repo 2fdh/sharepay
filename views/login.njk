@@ -2,13 +2,20 @@
 
 {% block content %}
 
-<div>
+<div class="jumbotron">
+  <h1 class="display-4">Sharepay</h1>
+  <p class="lead">A simple way to manage your activities</p>
+</div>
+
+<div class="row justify-content-around">
   <form method="POST" action="/authenticate">
   <input type="text" name="username" placeholder="Username" />
   <input type="password" name="password" placeholder="Password"/>
-  <button type="submit">
+  <button type="submit" class="btn btn-light">
     Sign in!
   </button>
+  <span> or </span>
+  <a class="btn btn-primary" href="/signup" role="button">Create account</a>
 </form>
 </div>
 

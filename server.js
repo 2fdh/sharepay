@@ -67,7 +67,8 @@ app.get("/login", function (request, result) {
 app.post("/authenticate",
 passport.authenticate("local", { failureRedirect: "/login" }),
 function (request, result) {
-  result.redirect("/profiles");
+
+  result.redirect("/profiles/"+request.user.id);
 });
 
 
@@ -76,7 +77,9 @@ app.get("/signup", function (request, result) {
   result.render("signup");
 });
 
-app.get("/profiles/:profile_id", function (request, result) {
+app.get("/profiles/:profile_id",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function (request, result) {
   usersService.getUser(request.params.profile_id)
     .then(res => result.render("profiles", {user: res.rows[0]}))
     .catch(e => result.redirect("/signup"));
