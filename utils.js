@@ -19,6 +19,15 @@ function healthCheck(callback) {
   );
 }
 
+function connectDB() {
+  const client = new PG.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: isPgSslActive(),
+});
+  client.connect();
+  return client.query(
+    "SELECT datname FROM pg_stat_activity");
+}
 
 function isPgSslActive () {
   if (process.env.SSLPG === "false") {
@@ -27,5 +36,8 @@ function isPgSslActive () {
   return true;
 }
 
-module.exports = {healthCheck:healthCheck,
-isPgSslActive : isPgSslActive};
+module.exports = {
+  healthCheck:healthCheck,
+  isPgSslActive : isPgSslActive,
+  connectDB: connectDB
+};
