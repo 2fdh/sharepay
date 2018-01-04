@@ -10,13 +10,26 @@
   <div class="row justify-content-center">
     <form method="POST" action="/create_user">
       <div class="row justify-content-center">
-        <div class="col-3">
-          <input type="text" name="username" placeholder="email" />
-          <input type="password" name="password" placeholder="Password"/>
-          <input type="firstname" name="firstname" placeholder="firstname"/>
-          <input type="lastname" name="lastname" placeholder="lastname"/>
-          <button type="submit" class="btn btn-primary">
-            Sign up!
+
+        <div align="center">
+          <div class="form-group">
+          <input type="text" name="username" placeholder="email" class="form-control"/>
+        </div>
+
+          <div class="form-group">
+          <input type="password" name="password" placeholder="Password" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+          <input type="firstname" name="firstname" placeholder="firstname" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+          <input type="lastname" name="lastname" placeholder="lastname" class="form-control"/>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg">
+            Sign up
           </button>
         </div>
       </div>

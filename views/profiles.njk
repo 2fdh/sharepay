@@ -1,13 +1,12 @@
 {% extends "layout.njk" %}
 
 {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Welcome {{user.firstname}}</h1>
+  <p>username: {{user.login}}</p>
+</div>
 
-  <div>
-<h1>Welcome</h1>
-<div> name: {{user.name}}</div>
-<div> firstname: {{user.firstname}}</div>
-<div> username: {{user.login}}</div>
-  </div>
+<h3>Your activities</h3>
 
 
 {% endblock %}
