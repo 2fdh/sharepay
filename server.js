@@ -5,7 +5,9 @@ const aqueries = require("./activities-queries.js");
 const usersService = require("./users.js")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const { Pool } = require('pg')
+const {
+  Pool
+} = require('pg')
 
 const app = express();
 app.use(require("body-parser").urlencoded({
@@ -26,7 +28,9 @@ nunjucks.configure("views", {
 app.set("views", __dirname + "/views");
 app.set("view engine", "njk");
 
-app.use(require("body-parser").urlencoded({ extended: true }));
+app.use(require("body-parser").urlencoded({
+  extended: true
+}));
 app.use(require("cookie-parser")());
 app.use(
   require("express-session")({
@@ -73,31 +77,35 @@ app.get("/login", function(request, result) {
 });
 
 app.post("/authenticate",
-passport.authenticate("local", { failureRedirect: "/login" }),
-function (request, result) {
+  passport.authenticate("local", {
+    failureRedirect: "/login"
+  }),
+  function(request, result) {
 
-  result.redirect("/profiles/"+request.user.id);
-});
+    result.redirect("/profiles/" + request.user.id);
+  });
 
-app.get("/signup", function (request, result) {
+app.get("/signup", function(request, result) {
   result.render("signup");
 });
 
 app.get("/profiles/:profile_id",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function (request, result) {
-  usersService.getUser(request.params.profile_id, pool)
-    .then(res => result.render("profiles", {user: res.rows[0]}))
-    .catch(e => result.redirect("/signup"));
-});
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    usersService.getUser(request.params.profile_id, pool)
+      .then(res => result.render("profiles", {
+        user: res.rows[0]
+      }))
+      .catch(e => result.redirect("/signup"));
+  });
 
-app.post("/create_user", function (request, result) {
+app.post("/create_user", function(request, result) {
   usersService.createUser(request.body, pool)
-    .then(res => result.redirect("/profiles/" + res.rows[0].id ))
+    .then(res => result.redirect("/profiles/" + res.rows[0].id))
     .catch(e => console.log(e.stack));
 });
 
-app.get("/health-check", function (request, result) {
+app.get("/health-check", function(request, result) {
   utils.healthCheck((error, resultQuery, pool) => {
     if (error) {
       result.send(error);
@@ -107,7 +115,15 @@ app.get("/health-check", function (request, result) {
   })
 });
 
-app.get("/activities", function(request, result) {
+app.get("/activities/create",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
+  result.render("activity_create");
+});
+
+app.get("/activities",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
   aqueries.getAllActivities(pool, (error, resultQuery) => {
     if (error) {
       result.send(error);
@@ -119,20 +135,30 @@ app.get("/activities", function(request, result) {
   })
 });
 
-app.get("/activities/create", function(request, result) {
-  result.render("activity_create");
+app.get("/activities/:id",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
+  aqueries.getActivityDetails(request.params.id, pool)
+    .then(res => result.render("activity_details", {
+      activity_id: res.rows[0].id,
+      activity_title: res.rows[0].title,
+      activity_description: res.rows[0].description,
+      activity_status: res.rows[0].status
+    }));
 });
 
+
 app.post(
-    "/activities/create",
-    function(request, result) {
-      aqueries.createActivity(request.body, pool)
+  "/activities/create",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.createActivity(request.body, pool)
       .then(res => result.redirect("/activities"))
       .catch(err => console.warn(err));
-    }
+  }
 )
 
-function isPgSslActive () {
+function isPgSslActive() {
   if (process.env.SSLPG === "false") {
     return false;
   }
