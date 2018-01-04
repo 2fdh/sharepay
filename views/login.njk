@@ -8,15 +8,31 @@
 </div>
 
 <div class="row justify-content-around">
-  <form method="POST" action="/authenticate">
-  <input type="text" name="username" placeholder="Username" />
-  <input type="password" name="password" placeholder="Password"/>
-  <button type="submit" class="btn btn-light">
-    Sign in!
-  </button>
-  <span> or </span>
-  <a class="btn btn-primary" href="/signup" role="button">Create account</a>
+  <form class="form-inline" method="POST" action="/authenticate">
+
+      <div class="col-md-5 mb-3">
+        <input type="text" name="username" class="form-control is-valid" id="validationServer03" placeholder="email" required>
+      </div>
+
+      <div class="col-md-5 mb-3">
+        <input type="password" name="password" class="form-control is-valid" id="validationServer03" placeholder="password" required>
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <button type="submit" class="btn btn-secondary">
+          Sign in
+        </button>
+      </div>
+
 </form>
+
+</div>
+
+<p align="center">You don't have account?</p>
+
+<div class="row justify-content-around">
+
+  <a class="btn btn-primary btn-lg" href="/signup" role="button">Create account</a>
 </div>
 
 {% endblock %}
