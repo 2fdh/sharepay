@@ -7,6 +7,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
+app.use(require("body-parser").urlencoded({
+  extended: true
+}));
 
 const port = process.env.PORT || 3000;
 
@@ -55,11 +58,11 @@ passport.use(
 );
 
 
-app.get("/", function (request, result) {
+app.get("/", function(request, result) {
   result.redirect("/login");
 });
 
-app.get("/login", function (request, result) {
+app.get("/login", function(request, result) {
   result.render("login");
 });
 
@@ -100,16 +103,32 @@ app.get("/health-check", function (request, result) {
   })
 });
 
-app.get("/activities", function (request, result) {
-    aqueries.getAllActivities((error, resultQuery) => {
-      if (error) {
-        result.send(error);
-      } else {
-        result.render("activities",{activities:resultQuery});
-      }
-    })
+app.get("/activities", function(request, result) {
+  aqueries.getAllActivities((error, resultQuery) => {
+    if (error) {
+      result.send(error);
+    } else {
+      result.render("activities", {
+        activities: resultQuery
+      });
+    }
+  })
 });
 
-app.listen(port, function () {
+app.get("/activities/create", function(request, result) {
+  result.render("activity_create");
+});
+
+app.post(
+    "/activities/create",
+    function(request, result) {
+      aqueries.createActivity(request.body)
+      .then(res => result.redirect("/activities"))
+      .catch(err => console.warn(err));
+    }
+)
+
+
+app.listen(port, function() {
   console.log("Server listening on port:" + port);
 });

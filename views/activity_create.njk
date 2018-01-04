@@ -1,0 +1,18 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+
+<form method="POST" action="/activities/create">
+<input type="text" name="title" placeholder="Activity Title" />
+<input type="text" name="description" placeholder="Activity description" />
+<input type="text" name="attendee" placeholder="Name of an Attendee" />
+<input type="hidden" name="hidden_value" value="i-4m-1nvi5ibl3" />
+
+<button type="submit">
+  Create Activity!
+</button>
+</form>
+
+
+{% endblock %}

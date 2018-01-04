@@ -15,14 +15,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -35,7 +35,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: activities; Type: TABLE; Schema: public; Owner: Damien
+-- Name: activities; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE activities (
@@ -46,10 +46,10 @@ CREATE TABLE activities (
 );
 
 
-ALTER TABLE activities OWNER TO "Damien";
+ALTER TABLE activities OWNER TO "postgres";
 
 --
--- Name: activities_users; Type: TABLE; Schema: public; Owner: Damien
+-- Name: activities_users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE activities_users (
@@ -59,10 +59,10 @@ CREATE TABLE activities_users (
 );
 
 
-ALTER TABLE activities_users OWNER TO "Damien";
+ALTER TABLE activities_users OWNER TO "postgres";
 
 --
--- Name: expenses; Type: TABLE; Schema: public; Owner: Damien
+-- Name: expenses; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE expenses (
@@ -74,10 +74,10 @@ CREATE TABLE expenses (
 );
 
 
-ALTER TABLE expenses OWNER TO "Damien";
+ALTER TABLE expenses OWNER TO "postgres";
 
 --
--- Name: expenses_users; Type: TABLE; Schema: public; Owner: Damien
+-- Name: expenses_users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE expenses_users (
@@ -89,10 +89,10 @@ CREATE TABLE expenses_users (
 );
 
 
-ALTER TABLE expenses_users OWNER TO "Damien";
+ALTER TABLE expenses_users OWNER TO "postgres";
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: Damien
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE users (
@@ -105,10 +105,10 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE users OWNER TO "Damien";
+ALTER TABLE users OWNER TO "postgres";
 
 --
--- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: Damien
+-- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY activities (id, title, description, status) FROM stdin;
@@ -118,7 +118,7 @@ e28022df-9727-4a98-ab86-12bf9021050f	Réappro pot de fin	stage	Open
 
 
 --
--- Data for Name: activities_users; Type: TABLE DATA; Schema: public; Owner: Damien
+-- Data for Name: activities_users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY activities_users (activity_id, user_id, is_owner) FROM stdin;
@@ -134,7 +134,7 @@ e28022df-9727-4a98-ab86-12bf9021050f	629ff909-91b3-42ba-a9b3-0934720e9fba	f
 
 
 --
--- Data for Name: expenses; Type: TABLE DATA; Schema: public; Owner: Damien
+-- Data for Name: expenses; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY expenses (id, title, date, amount, activity_id) FROM stdin;
@@ -145,7 +145,7 @@ eabe76da-c4ef-4ac9-92d5-4f2a98db498b	Cahouètes	2018-01-01 17:23:54	1000	e28022d
 
 
 --
--- Data for Name: expenses_users; Type: TABLE DATA; Schema: public; Owner: Damien
+-- Data for Name: expenses_users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY expenses_users (expense_id, user_id, is_payer, parts_quantity, split_amount) FROM stdin;
@@ -165,7 +165,7 @@ eabe76da-c4ef-4ac9-92d5-4f2a98db498b	629ff909-91b3-42ba-a9b3-0934720e9fba	f	1	25
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: Damien
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY users (id, name, firstname, login, password, facebook_id) FROM stdin;
@@ -177,7 +177,7 @@ d04479ef-a2a9-4b3c-8b6d-40fd49062aa1	ALI	Hamza	hamza.ali@decathlon.com	1234	\N
 
 
 --
--- Name: activities activities_pk; Type: CONSTRAINT; Schema: public; Owner: Damien
+-- Name: activities activities_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY activities
@@ -185,7 +185,7 @@ ALTER TABLE ONLY activities
 
 
 --
--- Name: expenses expenses_pk; Type: CONSTRAINT; Schema: public; Owner: Damien
+-- Name: expenses expenses_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY expenses
@@ -193,7 +193,7 @@ ALTER TABLE ONLY expenses
 
 
 --
--- Name: users user_pk; Type: CONSTRAINT; Schema: public; Owner: Damien
+-- Name: users user_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY users
@@ -201,21 +201,21 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: activities_users_idx; Type: INDEX; Schema: public; Owner: Damien
+-- Name: activities_users_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX activities_users_idx ON activities_users USING btree (activity_id, user_id);
 
 
 --
--- Name: expenses_user_idx; Type: INDEX; Schema: public; Owner: Damien
+-- Name: expenses_user_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX expenses_user_idx ON expenses_users USING btree (expense_id, user_id);
 
 
 --
--- Name: expenses expenses_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: Damien
+-- Name: expenses expenses_activity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY expenses
@@ -225,4 +225,3 @@ ALTER TABLE ONLY expenses
 --
 -- PostgreSQL database dump complete
 --
-
