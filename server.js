@@ -5,6 +5,9 @@ const aqueries = require("./activities-queries.js");
 const usersService = require("./users.js")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+const FB = require("fb");
+
 const {
   Pool
 } = require('pg')
@@ -44,11 +47,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, callback) {
-  return callback(null, user.login);
+  return callback(null, user.id);
 });
 
-passport.deserializeUser(function(login, callback) {
-  return usersService.findUserByEmail(login, pool).then(user => {
+passport.deserializeUser(function(id, callback) {
+  return usersService.findUserById(id, pool).then(user => {
     callback(null, user)
   });
 })
@@ -67,6 +70,38 @@ passport.use(
   })
 );
 
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.REDIRECT_URI
+    },
+    function(accessToken, refreshToken, profile, callback) {
+   FB.api(
+     "me",
+     { fields: "id,name,email", access_token: accessToken },
+     function(user) {
+       usersService.findOrCreateFbUser(user, pool)
+         .then(user => {
+           callback(null, user);
+         })
+         .catch(error => {
+           callback(error);
+         })
+     }
+   );
+ }
+  )
+);
+
+app.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    authType: "rerequest", // rerequest is here to ask again if login was denied once,
+    scope: ["email"]
+  })
+);
 
 app.get("/", function(request, result) {
   result.redirect("/login");
@@ -75,6 +110,14 @@ app.get("/", function(request, result) {
 app.get("/login", function(request, result) {
   result.render("login");
 });
+
+app.get(
+  "/auth/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  function(request, result) {
+    result.redirect("/profiles/" + request.user.id);
+  }
+);
 
 app.post("/authenticate",
   passport.authenticate("local", {
