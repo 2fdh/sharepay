@@ -46,7 +46,6 @@ passport.use(
     usersService
       .findUser(login, password)
       .then(user => {
-        console.log(user);
         callback(null, user.rows[0]);
       })
       .catch(error => {
@@ -86,7 +85,6 @@ function (request, result) {
 });
 
 app.post("/create_user", function (request, result) {
-  console.log(request.body);
   usersService.createUser(request.body)
     .then(res => result.redirect("/profiles/" + res.rows[0].id ))
     .catch(e => console.log(e.stack));
