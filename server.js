@@ -131,6 +131,20 @@ function(request, result) {
   })
 });
 
+app.get("/activities/history",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
+  aqueries.getAllActivitiesHistory(pool, (error, resultQuery) => {
+    if (error) {
+      result.send(error);
+    } else {
+      result.render("activities_history", {
+        activities: resultQuery
+      });
+    }
+  })
+});
+
 app.get("/activities/:id",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
@@ -142,6 +156,7 @@ function(request, result) {
       activity_status: res.rows[0].status
     }));
 });
+
 
 
 app.post(
