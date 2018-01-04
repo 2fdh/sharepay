@@ -21,73 +21,42 @@ function getAllActivities(callback) {
   );
 }
 
-
 function createActivity(form) {
   const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  client.connect();
+    connectionString: process.env.DATABASE_URL,
+    ssl: utils.isPgSslActive(),
+  });
+  client.connect()
   return client.query(
-    "INSERT INTO activities (id,title,description,status) VALUES ($1,$2,$3,$4) RETURNING id",
-    [uuidv4(),form.title,form.description,"Open"]);
-  }
-
-function addAttendees(form) {
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  client.connect();
-  return client.query(
-    "INSERT INTO users (id,name,firstname,login,password) VALUES ($1,$2,$3,$4,$5) RETURNING id",
-    [uuidv4(),"toto",form.attendee,"toto","titi"]);
-  }
-
-function retrieveUserId(form){
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  client.connect();
-  return client.query(
-    "select id from users where firstname=$1",
-    [form.attendee])
-}
-
-function retrieveActivityId(form){
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  client.connect();
-  return client.query(
-    "select id from activities where title=$1 and description=$2",
-    [form.title,form.description])
-}
-
-function insertActivitiesUsers(form){
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  Promise.all([
-    retrieveUserId(form),
-    retrieveActivityId(form)
-  ])
-  .then (function(promiseAllResult) {
-    client.connect();
-    return client.query(
-      "insert into activities_users Values ($1,$2,$3)",
-      [promiseAllResult[1].rows[0].id,promiseAllResult[0].rows[0].id,true]
+    "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id",
+    [uuidv4(),form.title,form.description,"Open"]
   )
-})
+  .then(res => {
+    let joinObject = {activityId: res.rows[0].id};
+    return joinObject;
+  })
+  .then(res => {
+    return client.query(
+      "INSERT INTO users (id,name,firstname,login,password) VALUES ($1::uuid,$2::text,$3::text,$4::text,$5::text) RETURNING id",
+      [uuidv4(),"toto",form.attendee,"toto","titi"]
+    )
+    .then(res2 => {
+      res.userId = res2.rows[0].id;
+      return res
+    })
+    .then(finalRes =>
+      client.query(
+          "insert into activities_users Values ($1::uuid,$2::uuid,$3::boolean)",
+          [finalRes.activityId, finalRes.userId, true]
+        )
+    )
+    .catch(e => console.log(e))
+  })
 }
+
 
 
 module.exports = {
   getAllActivities:getAllActivities,
-  createActivity:createActivity,
-  addAttendees:addAttendees,
-  insertActivitiesUsers:insertActivitiesUsers
+  createActivity:createActivity
 };

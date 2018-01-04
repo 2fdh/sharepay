@@ -122,11 +122,7 @@ app.get("/activities/create", function(request, result) {
 app.post(
     "/activities/create",
     function(request, result) {
-      Promise.all([
-        aqueries.addAttendees(request.body),
-        aqueries.createActivity(request.body),
-        aqueries.insertActivitiesUsers(request.body)
-      ])
+      aqueries.createActivity(request.body)
       .then(res => result.redirect("/activities"))
       .catch(err => console.warn(err));
     }
