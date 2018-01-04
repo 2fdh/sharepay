@@ -14,6 +14,19 @@ function getAllActivities(pool, callback) {
   );
 }
 
+function getAllActivitiesHistory(pool, callback) {
+  pool.query(
+    "SELECT * FROM activities where status='Close'",
+    function(error, resultQuery) {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, resultQuery.rows);
+      }
+    }
+  );
+}
+
 function createActivity(form, pool) {
   return pool.query(
       "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id", [uuidv4(), form.title, form.description, "Open"]
@@ -43,9 +56,7 @@ function createActivity(form, pool) {
 
 
 function getActivityDetails(id, pool) {
-
   return pool.query("SELECT * from activities where id = $1 ", [id]);
-
 }
 
 
@@ -53,5 +64,6 @@ function getActivityDetails(id, pool) {
 module.exports = {
   getAllActivities: getAllActivities,
   createActivity: createActivity,
-  getActivityDetails: getActivityDetails
+  getActivityDetails: getActivityDetails,
+  getAllActivitiesHistory:getAllActivitiesHistory
 };

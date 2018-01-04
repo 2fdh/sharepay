@@ -1,0 +1,10 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+  {% for activity in activities %}
+    <li><a href="/activities/{{activity.id}}">{{activity.title}}</a></li>
+  {% endfor %}
+
+
+{% endblock %}
