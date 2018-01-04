@@ -106,13 +106,9 @@ app.post("/create_user", function(request, result) {
 });
 
 app.get("/health-check", function(request, result) {
-  utils.healthCheck((error, resultQuery, pool) => {
-    if (error) {
-      result.send(error);
-    } else {
-      result.send(resultQuery);
-    }
-  })
+  utils.healthCheck(pool)
+    .then(resultQuery => result.json({message: "everything goes well"}))
+    .catch(e => result.send(e));
 });
 
 app.get("/activities/create",

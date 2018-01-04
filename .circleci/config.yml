@@ -8,7 +8,16 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
+        environment:
+            PGHOST: 127.0.0.1
+            PGUSER: sharepay2dfh_test
+            SSLPG: false
 
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: sharepay2dfh_test
+          POSTGRES_DB: sharepay2dfh_test
+          POSTGRES_PASSWORD: ""
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -27,6 +36,22 @@ jobs:
           - v1-dependencies-
 
       - run: npm install
+
+      - store_artifacts:
+          path: ./sql/dump.sql
+          destination: artifact-file
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run: sudo apt-get update
+
+      - run: sudo apt install --fix-missing postgresql-client
+
+      - run:
+          name: dump DB
+          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh_test -d sharepay2dfh_test -f ./sql/dump.sql
 
       - save_cache:
           paths:
