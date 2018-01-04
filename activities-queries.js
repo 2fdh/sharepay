@@ -1,16 +1,22 @@
 const utils = require("./utils.js");
 const uuidv4 = require('uuid/v4');
 
-function getAllActivities(pool) {
+function getAllActivities(pool,id) {
   return pool.query(
-    "SELECT * FROM activities where status='Open'")
+    "SELECT * FROM activities where status='Open'"
+    //"SELECT * FROM activities inner join activities_users on activities_users.activity_id=activities.id where status='Open' and activities_users.user_id=$1",
+    //[id]
+  )
     .then (resultQuery => resultQuery.rows)
     .catch(e => console.log(e))
   }
 
 function getAllActivitiesHistory(pool) {
   return pool.query(
-    "SELECT * FROM activities where status='Close'")
+    "SELECT * FROM activities where status='Close'"
+    //"SELECT * FROM activities inner join activities_users on activities_users.activity_id=activities.id where status='Close' and activities_users.user_id=$1",
+    //[id]
+  )
     .then (resultQuery => resultQuery.rows)
     .catch(e => console.log(e))
   }

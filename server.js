@@ -137,7 +137,7 @@ app.get("/profiles/:profile_id",
   function(request, result) {
     Promise.all([
       usersService.getUser(request.params.profile_id, pool),
-      aqueries.getAllActivities(pool)
+      aqueries.getAllActivities(pool,request.params.profile_id)
     ])
     .then(function(promiseAllResult) {
         result.render("profiles", {
@@ -194,7 +194,7 @@ app.post(
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
     aqueries.createActivity(request.body, pool)
-      .then(res => result.redirect("/activities"))
+      .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
       .catch(err => console.warn(err));
   }
 )
