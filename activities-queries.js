@@ -1,14 +1,9 @@
-const PG = require("pg");
+// const PG = require("pg");
 const utils = require("./utils.js");
 const uuidv4 = require('uuid/v4');
 
-function getAllActivities(callback) {
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: utils.isPgSslActive(),
-});
-  client.connect();
-  client.query(
+function getAllActivities(pool, callback) {
+  pool.query(
     "SELECT * FROM activities where status='Open'",
     function(error, resultQuery) {
       if (error) {
@@ -16,18 +11,12 @@ function getAllActivities(callback) {
       } else {
         callback(null, resultQuery.rows);
       }
-      client.end();
     }
   );
 }
 
-function createActivity(form) {
-  const client = new PG.Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: utils.isPgSslActive(),
-  });
-  client.connect()
-  return client.query(
+function createActivity(form, pool) {
+  return pool.query(
     "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id",
     [uuidv4(),form.title,form.description,"Open"]
   )
@@ -36,7 +25,7 @@ function createActivity(form) {
     return joinObject;
   })
   .then(res => {
-    return client.query(
+    return pool.query(
       "INSERT INTO users (id,name,firstname,login,password) VALUES ($1::uuid,$2::text,$3::text,$4::text,$5::text) RETURNING id",
       [uuidv4(),"toto",form.attendee,"toto","titi"]
     )
@@ -45,7 +34,7 @@ function createActivity(form) {
       return res
     })
     .then(finalRes =>
-      client.query(
+      pool.query(
           "insert into activities_users Values ($1::uuid,$2::uuid,$3::boolean)",
           [finalRes.activityId, finalRes.userId, true]
         )

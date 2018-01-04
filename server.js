@@ -5,6 +5,7 @@ const aqueries = require("./activities-queries.js");
 const usersService = require("./users.js")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const { Pool } = require('pg')
 
 const app = express();
 app.use(require("body-parser").urlencoded({
@@ -12,6 +13,11 @@ app.use(require("body-parser").urlencoded({
 }));
 
 const port = process.env.PORT || 3000;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: isPgSslActive()
+})
 
 nunjucks.configure("views", {
   autoescape: true,
@@ -38,7 +44,7 @@ passport.serializeUser(function(user, callback) {
 });
 
 passport.deserializeUser(function(login, callback) {
-  return usersService.findUserByEmail(login).then(user => {
+  return usersService.findUserByEmail(login, pool).then(user => {
     callback(null, user)
   });
 })
@@ -47,7 +53,7 @@ passport.deserializeUser(function(login, callback) {
 passport.use(
   new LocalStrategy(function(login, password, callback) {
     usersService
-      .findUser(login, password)
+      .findUser(login, password, pool)
       .then(user => {
         callback(null, user.rows[0]);
       })
@@ -73,8 +79,6 @@ function (request, result) {
   result.redirect("/profiles/"+request.user.id);
 });
 
-
-
 app.get("/signup", function (request, result) {
   result.render("signup");
 });
@@ -82,19 +86,19 @@ app.get("/signup", function (request, result) {
 app.get("/profiles/:profile_id",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function (request, result) {
-  usersService.getUser(request.params.profile_id)
+  usersService.getUser(request.params.profile_id, pool)
     .then(res => result.render("profiles", {user: res.rows[0]}))
     .catch(e => result.redirect("/signup"));
 });
 
 app.post("/create_user", function (request, result) {
-  usersService.createUser(request.body)
+  usersService.createUser(request.body, pool)
     .then(res => result.redirect("/profiles/" + res.rows[0].id ))
     .catch(e => console.log(e.stack));
 });
 
 app.get("/health-check", function (request, result) {
-  utils.healthCheck((error, resultQuery) => {
+  utils.healthCheck((error, resultQuery, pool) => {
     if (error) {
       result.send(error);
     } else {
@@ -104,7 +108,7 @@ app.get("/health-check", function (request, result) {
 });
 
 app.get("/activities", function(request, result) {
-  aqueries.getAllActivities((error, resultQuery) => {
+  aqueries.getAllActivities(pool, (error, resultQuery) => {
     if (error) {
       result.send(error);
     } else {
@@ -122,12 +126,18 @@ app.get("/activities/create", function(request, result) {
 app.post(
     "/activities/create",
     function(request, result) {
-      aqueries.createActivity(request.body)
+      aqueries.createActivity(request.body, pool)
       .then(res => result.redirect("/activities"))
       .catch(err => console.warn(err));
     }
 )
 
+function isPgSslActive () {
+  if (process.env.SSLPG === "false") {
+    return false;
+  }
+  return true;
+}
 
 app.listen(port, function() {
   console.log("Server listening on port:" + port);
