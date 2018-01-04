@@ -9,10 +9,10 @@ const pool = new Pool({
   port: 5432,
 })
 
-test("should connect DB", () => {
+test("should connect DB and show stats", () => {
   expect.assertions(1);
 
-  return utils.connectDB(pool).then(result =>
+  return utils.healthCheck(pool).then(result =>
     expect(result.rows.length).toBeGreaterThan(0)
   );
 
