@@ -51,7 +51,7 @@ jobs:
 
       - run:
           name: dump DB
-          command: sudo psql -d sharepay2dfh-test -f ./sql/dump.sql
+          command: sudo psql -d sharepay2dfh-test -f artifact-file
 
       - save_cache:
           paths:
