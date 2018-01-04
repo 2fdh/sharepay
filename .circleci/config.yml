@@ -42,6 +42,12 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
 
+      - run: sudo apt install postgresql-client
+
+      - run:
+          name: dump DB
+          command: sudo psql -d sharepay2dfh-test -f ./sql/dump.sql
+
       - save_cache:
           paths:
             - node_modules
