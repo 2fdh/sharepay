@@ -11,6 +11,7 @@ jobs:
         environment:
             PGHOST: 127.0.0.1
             PGUSER: sharepay2dfh-test
+            SSLPG: false
 
       - image: circleci/postgres:9.5-alpine
         environment:
