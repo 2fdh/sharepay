@@ -51,7 +51,7 @@ jobs:
 
       - run:
           name: dump DB
-          command: sudo psql --host 127.0.0.1 --port 5432 -d sharepay2dfh-test -f artifact-file
+          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh-test -d sharepay2dfh-test -f artifact-file
 
       - save_cache:
           paths:
