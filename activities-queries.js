@@ -1,31 +1,20 @@
 const utils = require("./utils.js");
 const uuidv4 = require('uuid/v4');
 
-function getAllActivities(pool, callback) {
-  pool.query(
-    "SELECT * FROM activities where status='Open'",
-    function(error, resultQuery) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, resultQuery.rows);
-      }
-    }
-  );
-}
+function getAllActivities(pool) {
+  return pool.query(
+    "SELECT * FROM activities where status='Open'")
+    .then (resultQuery => resultQuery.rows)
+    .catch(e => console.log(e))
+  }
 
-function getAllActivitiesHistory(pool, callback) {
-  pool.query(
-    "SELECT * FROM activities where status='Close'",
-    function(error, resultQuery) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, resultQuery.rows);
-      }
-    }
-  );
-}
+function getAllActivitiesHistory(pool) {
+  return pool.query(
+    "SELECT * FROM activities where status='Close'")
+    .then (resultQuery => resultQuery.rows)
+    .catch(e => console.log(e))
+  }
+
 
 function createActivity(form, pool) {
   return pool.query(
