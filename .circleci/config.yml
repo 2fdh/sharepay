@@ -10,13 +10,13 @@ jobs:
       - image: circleci/node:7.10
         environment:
             PGHOST: 127.0.0.1
-            PGUSER: sharepay2dfh-test
+            PGUSER: sharepay2dfh_test
             SSLPG: false
 
       - image: circleci/postgres:9.5-alpine
         environment:
-          POSTGRES_USER: sharepay2dfh-test
-          POSTGRES_DB: sharepay2dfh-test
+          POSTGRES_USER: sharepay2dfh_test
+          POSTGRES_DB: sharepay2dfh_test
           POSTGRES_PASSWORD: ""
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -51,7 +51,7 @@ jobs:
 
       - run:
           name: dump DB
-          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh-test -d sharepay2dfh-test -f ./sql/dump.sql
+          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh_test -d sharepay2dfh_test -f ./sql/dump.sql
 
       - save_cache:
           paths:

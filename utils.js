@@ -19,13 +19,15 @@ function healthCheck(callback) {
   );
 }
 
-function connectDB() {
-  const client = new PG.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: isPgSslActive(),
-});
-  client.connect();
-  return client.query(
+function connectDB(PGconnect) {
+//   const client = new PG.Client({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: isPgSslActive(),
+// });
+  // client.connect();
+  // return client.query(
+  //   "SELECT datname FROM pg_stat_activity");
+  return PGconnect.query(
     "SELECT datname FROM pg_stat_activity");
 }
 
