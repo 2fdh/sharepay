@@ -46,8 +46,6 @@ CREATE TABLE activities (
 );
 
 
-ALTER TABLE activities OWNER TO "postgres";
-
 --
 -- Name: activities_users; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -58,8 +56,6 @@ CREATE TABLE activities_users (
     is_owner boolean
 );
 
-
-ALTER TABLE activities_users OWNER TO "postgres";
 
 --
 -- Name: expenses; Type: TABLE; Schema: public; Owner: postgres
@@ -74,8 +70,6 @@ CREATE TABLE expenses (
 );
 
 
-ALTER TABLE expenses OWNER TO "postgres";
-
 --
 -- Name: expenses_users; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -88,8 +82,6 @@ CREATE TABLE expenses_users (
     split_amount integer NOT NULL
 );
 
-
-ALTER TABLE expenses_users OWNER TO "postgres";
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
@@ -104,8 +96,6 @@ CREATE TABLE users (
     facebook_id character varying(255)
 );
 
-
-ALTER TABLE users OWNER TO "postgres";
 
 --
 -- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: postgres
