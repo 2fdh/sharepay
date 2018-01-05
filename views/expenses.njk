@@ -2,6 +2,18 @@
 
 {% block content %}
 
+Activity details  :
+
+<li>{{ activity.title }}</li>
+<li>{{ activity.description }}</li>
+<li>{{ attendee.name }}</li>
+
+<form method="POST" action="/activities/{{ activity.id }}">
+  <button type="submit">
+    Close Activity!
+  </button>
+</form>
+
 <table class="table">
   <thead>
     <tr>

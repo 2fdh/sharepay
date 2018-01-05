@@ -182,15 +182,17 @@ require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
   Promise.all([
     aqueries.getActivityDetails(request.params.id, pool),
-    aqueries.getActivityAttendees(request.params.id,pool)
+    expensesService.getExpenses(request.params.id, pool)
   ])
     .then(function(promiseAllResult) {
-        result.render("activity_details", {
+        result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
-          attendee : promiseAllResult[1].rows
+          expenses : promiseAllResult[1].rows
         })
       });
 });
+
+
 
 app.post(
   "/activities/create",
@@ -212,17 +214,6 @@ app.post(
   }
 )
 
-app.get(
-  "/activities/:activityid/expenses",
-  require("connect-ensure-login").ensureLoggedIn("/login"),
-  function(request, result){
-    const activity = {id: request.params.activityid}
-
-    expensesService.getExpenses(activity.id, pool)
-    .then(expenses => result.render("expenses", {expenses: expenses.rows, activity: activity}))
-    .catch(e => console.log(e));
-  }
-)
 
 app.get(
   "/activities/:activityid/create-expense/",
@@ -247,6 +238,7 @@ app.post(
     const activityId = request.params.activityid;
     const user = request.user.rows[0];
     const expenseForm = request.body;
+    console.log(expenseForm);
 
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
