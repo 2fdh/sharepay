@@ -192,10 +192,10 @@ eabe76da-c4ef-4ac9-92d5-4f2a98db498b	2645de87-8b51-4a50-96c3-06a1dc82204f
 --
 
 COPY users (id, name, firstname, login, password, facebook_id) FROM stdin;
-d04479ef-a2a9-4b3c-8b6d-40fd49062aa1	ALI	Hamza	hamza.ali@decathlon.com	1234	\N
-134b1f24-d1f8-4091-b704-963acc2f8487	GLORY	Fabien	fabien.glory@decathlon.com	1234	\N
-09d22b67-8871-4bd1-8988-4a33689a33d7	DUCATILLON	François	francois.ducatillon@decathlon.com	1234	\N
-629ff909-91b3-42ba-a9b3-0934720e9fba	LEPRETRE	Damien	damien.lepretre@decathlon.com	1234	\N
+d04479ef-a2a9-4b3c-8b6d-40fd49062aa1	ALI	Hamza	hamza.ali@decathlon.com	03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4	\N
+134b1f24-d1f8-4091-b704-963acc2f8487	GLORY	Fabien	fabien.glory@decathlon.com	03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4	\N
+09d22b67-8871-4bd1-8988-4a33689a33d7	DUCATILLON	François	francois.ducatillon@decathlon.com	03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4	\N
+629ff909-91b3-42ba-a9b3-0934720e9fba	LEPRETRE	Damien	damien.lepretre@decathlon.com	03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4	\N
 \.
 
 
