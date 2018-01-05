@@ -242,7 +242,7 @@ app.post(
 
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
-        result.redirect("/activities/"+ activityId +"/expenses")
+        result.redirect("/activities/"+ activityId)
       )
 
 

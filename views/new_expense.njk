@@ -26,7 +26,7 @@
   {% for attendee in attendees %}
   <div>
     <div>
-      <input name="attendees" type="checkbox" id="customCheck1" value="{{attendee.id}}">
+      <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendee.id}}">
       <label class="custom-control-label" for="customCheck1">{{attendee.name}}</label>
     </div>
   </div>
