@@ -3,6 +3,7 @@ const utils = require("./utils.js");
 const nunjucks = require("nunjucks");
 const aqueries = require("./activities-queries.js");
 const usersService = require("./users.js")
+const expensesService = require("./expenses.js");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
@@ -211,6 +212,31 @@ app.post(
   }
 )
 
+app.get(
+  "/activities/:activityid/expenses",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    const activity = {id: request.params.activityid}
+
+    expensesService.getExpenses(activity.id, pool)
+    .then(expenses => result.render("expenses", {expenses: expenses.rows, activity: activity}))
+    .catch(e => console.log(e));
+  }
+)
+
+app.get(
+  "/activities/:activityid/create-expense/",
+  //require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    const activity = {id: request.params.activityid}
+    // recup liste participants d'un activity
+    // on passe au render la liste []
+
+    
+    result.render("new_expense")
+  }
+
+)
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {
