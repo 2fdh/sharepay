@@ -1,15 +1,32 @@
 {% extends "layout.njk" %}
 
 {% block content %}
-
+<div class="jumbotron">
+  <h1 class="display-4">Start a new activity</h1>
+</div>
 
 <form method="POST" action="/activities/create">
+  <div class="form-group">
+    <label for="formGroupExampleInput">Activity title</label>
+    <input type="text" name="title" placeholder="Activity Title" class="form-control" id="formGroupExampleInput">
+  </div>
+  <div class="form-group">
+    <label for="formGroupExampleInput2">Description</label>
+    <input type="text" name="description" placeholder="Activity description"class="form-control" id="formGroupExampleInput2">
+  </div>
+  <div class="form-group">
+    <label for="formGroupExampleInput2">Name of an attendee</label>
+    <input type="text" name="attendee" placeholder="Name of an attendee" class="form-control" id="formGroupExampleInput3">
+  </div>
+</form>
+
+{# <form method="POST" action="/activities/create">
 <input type="text" name="title" placeholder="Activity Title" />
 <input type="text" name="description" placeholder="Activity description" />
 <input type="text" name="attendee" placeholder="Name of an Attendee" />
-<input type="hidden" name="hidden_value" value="i-4m-1nvi5ibl3" />
+<input type="hidden" name="hidden_value" value="i-4m-1nvi5ibl3" /> #}
 
-<button type="submit">
+<button type="submit" class="btn btn-primary">
   Create Activity!
 </button>
 </form>
