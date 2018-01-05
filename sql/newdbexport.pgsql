@@ -31,14 +31,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -52,9 +52,7 @@ SET default_with_oids = false;
 
 
 
---
--- Name: activities; Type: TABLE; Schema: public; Owner: Fabien
---
+
 
 CREATE TABLE activities (
     id uuid NOT NULL,
@@ -64,11 +62,7 @@ CREATE TABLE activities (
 );
 
 
-ALTER TABLE activities OWNER TO "Fabien";
 
---
--- Name: activities_attendees; Type: TABLE; Schema: public; Owner: Fabien
---
 
 CREATE TABLE activities_attendees (
     activity_id character varying(255),
@@ -76,11 +70,7 @@ CREATE TABLE activities_attendees (
 );
 
 
-ALTER TABLE activities_attendees OWNER TO "Fabien";
 
---
--- Name: activities_users; Type: TABLE; Schema: public; Owner: Fabien
---
 
 CREATE TABLE activities_users (
     activity_id uuid NOT NULL,
@@ -88,11 +78,7 @@ CREATE TABLE activities_users (
 );
 
 
-ALTER TABLE activities_users OWNER TO "Fabien";
 
---
--- Name: attendees; Type: TABLE; Schema: public; Owner: Fabien
---
 
 CREATE TABLE attendees (
     id uuid NOT NULL,
@@ -101,11 +87,8 @@ CREATE TABLE attendees (
 );
 
 
-ALTER TABLE attendees OWNER TO "Fabien";
 
---
--- Name: expenses; Type: TABLE; Schema: public; Owner: Fabien
---
+
 
 CREATE TABLE expenses (
     id uuid NOT NULL,
@@ -117,11 +100,6 @@ CREATE TABLE expenses (
 );
 
 
-ALTER TABLE expenses OWNER TO "Fabien";
-
---
--- Name: expenses_attendees; Type: TABLE; Schema: public; Owner: Fabien
---
 
 CREATE TABLE expenses_attendees (
     expense_id uuid NOT NULL,
@@ -129,11 +107,6 @@ CREATE TABLE expenses_attendees (
 );
 
 
-ALTER TABLE expenses_attendees OWNER TO "Fabien";
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: Fabien
---
 
 CREATE TABLE users (
     id uuid NOT NULL,
@@ -145,11 +118,7 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE users OWNER TO "Fabien";
 
---
--- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: Fabien
---
 
 COPY activities (id, title, description, status) FROM stdin;
 bee2b457-5b3f-403a-95c1-819a694ea6b1	My first activity	amazing actity	Open
@@ -294,4 +263,3 @@ ALTER TABLE ONLY expenses
 --
 -- PostgreSQL database dump complete
 --
-

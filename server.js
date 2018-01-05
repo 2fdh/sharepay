@@ -170,7 +170,7 @@ function(request, result) {
 app.get("/activities/history",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
-  aqueries.getAllActivitiesHistory(pool)
+  aqueries.getAllActivitiesHistory(pool,request.params.profile_id)
   .then(resultQuery =>result.render("activities_history",{activities:resultQuery}))
 });
 
@@ -187,6 +187,15 @@ function(request, result) {
     }));
 });
 
+app.post(
+  "/activities/:id",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.closeActivity(request.params.id,pool)
+    .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
+    .catch(err => console.warn(err));
+  }
+)
 
 
 app.post(

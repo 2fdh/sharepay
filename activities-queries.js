@@ -60,11 +60,19 @@ function getActivityDetails(id, pool) {
   return pool.query("SELECT * from activities where id = $1 ", [id]);
 }
 
+function closeActivity(activityId, pool) {
+  return pool.query(
+    "ALTER TABLE activities SET status='Close' where id=($1::uuid)",
+    [activityId]
+  )
+}
+
 
 
 module.exports = {
   getAllActivities: getAllActivities,
   createActivity: createActivity,
   getActivityDetails: getActivityDetails,
-  getAllActivitiesHistory:getAllActivitiesHistory
+  getAllActivitiesHistory:getAllActivitiesHistory,
+  closeActivity:closeActivity
 };
