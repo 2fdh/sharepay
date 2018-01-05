@@ -2,8 +2,6 @@ const users = require("../users.js")
 const { Pool } = require('pg')
 const sha256 = require('js-sha256');
 
-// GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO sharepay2dfh_test
-
 const pool = new Pool({
   user: 'sharepay2dfh_test',
   host: 'localhost',
@@ -115,5 +113,5 @@ describe("get Users", () => {
       }
     );
 
-  })
+  });
 });
