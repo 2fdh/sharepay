@@ -14,10 +14,22 @@
     <label for="formGroupExampleInput2">Description</label>
     <input type="text" name="description" placeholder="Activity description"class="form-control" id="formGroupExampleInput2">
   </div>
-  <div class="form-group">
+  <div id="attendee" class="form-group">
     <label for="formGroupExampleInput2">Name of an attendee</label>
-    <input type="text" name="attendee" placeholder="Name of an attendee" class="form-control" id="formGroupExampleInput3">
+    <input type="text" name="attendee" placeholder="Attendee name" class="form-control">
   </div>
+
+  <script type="text/javascript" >
+           var div = document.getElementById('attendee');
+           function addField() {
+               div.innerHTML += `  <div id="attendee" class="form-group">
+                   <input type="text" name="attendee" placeholder="Attendee name" class="form-control">
+                 </div>`;
+           }
+       </script>
+       <button type="button" onclick="addField()" >+</button>
+
+
   <button type="submit" class="btn btn-primary">
     Create Activity!
   </button>
