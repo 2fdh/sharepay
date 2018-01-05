@@ -16,15 +16,21 @@
   </div>
   <div id="attendee" class="form-group">
     <label for="formGroupExampleInput2">Name of an attendee</label>
-    <input type="text" name="attendee" placeholder="Attendee name" class="form-control">
+    <input type="text" name="attendee[]" placeholder="Attendee name" class="form-control mb-4">
   </div>
 
   <script type="text/javascript" >
-           var div = document.getElementById('attendee');
+           const div = document.getElementById("attendee");
+           function addInput(name,style){
+               const input = document.createElement("input");
+               input.name = name;
+               input.classList.add(style);
+               input.placeholder = "Attendee name";
+               div.appendChild(input);
+             }
            function addField() {
-               div.innerHTML += `  <div id="attendee" class="form-group">
-                   <input type="text" name="attendee" placeholder="Attendee name" class="form-control">
-                 </div>`;
+               addInput("attendee[]","form-control");
+               div.appendChild(document.createElement("br"));
            }
        </script>
        <button type="button" onclick="addField()" >+</button>
