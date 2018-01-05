@@ -60,9 +60,15 @@ function getActivityDetails(id, pool) {
   return pool.query("SELECT * from activities where id = $1 ", [id]);
 }
 
+function getActivityAttendees(activityId,pool){
+  return pool.query(
+    "SELECT * from attendees inner join activities_attendees on activities_attendees.attendee_id=attendees.id where activities_attendees.activity_id= ($1::uuid)",
+    [activityId])
+}
+
 function closeActivity(activityId, pool) {
   return pool.query(
-    "ALTER TABLE activities SET status='Close' where id=($1::uuid)",
+    "Update activities SET status='Close' where id=($1::uuid)",
     [activityId]
   )
 }
@@ -74,5 +80,6 @@ module.exports = {
   createActivity: createActivity,
   getActivityDetails: getActivityDetails,
   getAllActivitiesHistory:getAllActivitiesHistory,
-  closeActivity:closeActivity
+  closeActivity:closeActivity,
+  getActivityAttendees:getActivityAttendees
 };

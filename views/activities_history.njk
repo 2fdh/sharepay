@@ -3,7 +3,8 @@
 {% block content %}
 
   {% for activity in activities %}
-    <li><a href="/activities/{{activity.id}}">{{activity.title}}</a></li>
+    <li>{{ activity.title }}</li>
+    <li>{{ activity.description }}</li>
   {% endfor %}
 
 

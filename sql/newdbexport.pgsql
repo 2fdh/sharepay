@@ -65,8 +65,8 @@ CREATE TABLE activities (
 
 
 CREATE TABLE activities_attendees (
-    activity_id character varying(255),
-    attendee_id character varying(255)
+    activity_id uuid,
+    attendee_id uuid
 );
 
 
