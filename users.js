@@ -59,5 +59,6 @@ module.exports = {
   getUser: getUser,
   findUser: findUser,
   findUserById: findUserById,
-  findOrCreateFbUser: findOrCreateFbUser
+  findOrCreateFbUser: findOrCreateFbUser,
+  createUserFromFb: createUserFromFb
 }
