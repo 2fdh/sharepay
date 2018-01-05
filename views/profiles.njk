@@ -3,17 +3,29 @@
 {% block content %}
 <div class="jumbotron">
   <h1 class="display-4">Welcome {{user.firstname}} {{user.name}}</h1>
-  <p>username: {{user.login}}</p>
+  <p>{{user.login}}</p>
 </div>
+
+<a href="/activities/create">
+  <button type="button" class="btn btn-primary btn-lg btn-block">Create a new activity</button>
+</a>
 
 <h3>Your activities</h3>
 
-  {% for activity in activities %}
-    <li><a href="/activities/{{activity.id}}">{{activity.title}}</a></li>
-  {% endfor %}
+{% for activity in activities %}
+<div class="card" style="width: 20rem;" id=card>
+<img class="card-img-top" src="https://images.unsplash.com/photo-1505906690561-4dc7060250b6?auto=format&fit=crop&w=1569&q=80" alt="Card image cap">
+<div class="card-body">
+  <h4 class="card-title">{{activity.title}}</h4>
+  <p class="card-text">{{Activity.description}}</p>
+  <a href="#" class="btn btn-primary">See details</a>
+</div>
+</div>
+{% endfor %}
 
-  <a href="/activities/history"><input type="button" value="Activity history"></a>
-  <a href="/activities/create"><input type="button" value="Create Activity"></a>
-
+<br>
+<a href="/activities/history">
+<button type="button" class="btn btn-danger">See closed activities</button>
+</a>
 
 {% endblock %}
