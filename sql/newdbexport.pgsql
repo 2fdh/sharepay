@@ -65,8 +65,8 @@ CREATE TABLE activities (
 
 
 CREATE TABLE activities_attendees (
-    activity_id uuid,
-    attendee_id uuid
+    activity_id uuid NOT NULL,
+    attendee_id uuid NOT NULL
 );
 
 
@@ -131,7 +131,7 @@ e28022df-9727-4a98-ab86-12bf9021050f	Réappro pot de fin	stage	Open
 --
 
 COPY activities_attendees (activity_id, attendee_id) FROM stdin;
-bee2b457-5b3f-403a-95c1-819a694ea6b1	7d476145-f68f-4ee9-a501-f0c43d85cb7d\n
+bee2b457-5b3f-403a-95c1-819a694ea6b1	7d476145-f68f-4ee9-a501-f0c43d85cb7d
 bee2b457-5b3f-403a-95c1-819a694ea6b1	e62a1758-c787-4772-886a-a015381bf9b4
 bee2b457-5b3f-403a-95c1-819a694ea6b1	3f0e622e-bda1-42ff-939f-d6afe6b7e6ff
 e28022df-9727-4a98-ab86-12bf9021050f	2645de87-8b51-4a50-96c3-06a1dc82204f

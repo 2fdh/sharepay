@@ -186,7 +186,7 @@ function(request, result) {
     .then(function(promiseAllResult) {
         result.render("activity_details", {
           activity : promiseAllResult[0].rows[0],
-          attendee : promiseAllResult[1].rows[0]
+          attendee : promiseAllResult[1].rows
         })
       });
 });
