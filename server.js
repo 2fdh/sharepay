@@ -135,11 +135,17 @@ app.get("/signup", function(request, result) {
 app.get("/profiles/:profile_id",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
-    usersService.getUser(request.params.profile_id, pool)
-      .then(res => result.render("profiles", {
-        user: res.rows[0]
-      }))
-      .catch(e => result.redirect("/signup"));
+    Promise.all([
+      usersService.getUser(request.params.profile_id, pool),
+      aqueries.getAllActivities(pool,request.params.profile_id)
+    ])
+    .then(function(promiseAllResult) {
+        result.render("profiles", {
+          user : promiseAllResult[0].rows[0],
+          activities : promiseAllResult[1]
+        })
+      })
+    .catch(e => result.redirect("/signup"));
   });
 
 app.post("/create_user", function(request, result) {
@@ -160,33 +166,14 @@ function(request, result) {
   result.render("activity_create");
 });
 
-app.get("/activities",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  aqueries.getAllActivities(pool, (error, resultQuery) => {
-    if (error) {
-      result.send(error);
-    } else {
-      result.render("activities", {
-        activities: resultQuery
-      });
-    }
-  })
-});
 
 app.get("/activities/history",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
-  aqueries.getAllActivitiesHistory(pool, (error, resultQuery) => {
-    if (error) {
-      result.send(error);
-    } else {
-      result.render("activities_history", {
-        activities: resultQuery
-      });
-    }
-  })
+  aqueries.getAllActivitiesHistory(pool,request.params.profile_id)
+  .then(resultQuery =>result.render("activities_history",{activities:resultQuery}))
 });
+
 
 app.get("/activities/:id",
 require("connect-ensure-login").ensureLoggedIn("/login"),
@@ -200,14 +187,23 @@ function(request, result) {
     }));
 });
 
+app.post(
+  "/activities/:id",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.closeActivity(request.params.id,pool)
+    .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
+    .catch(err => console.warn(err));
+  }
+)
 
 
 app.post(
   "/activities/create",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
-    aqueries.createActivity(request.body, pool)
-      .then(res => result.redirect("/activities"))
+    aqueries.createActivity(request.body, pool, request.user.rows[0].id)
+      .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
       .catch(err => console.warn(err));
   }
 )
