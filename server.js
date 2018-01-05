@@ -226,16 +226,35 @@ app.get(
 
 app.get(
   "/activities/:activityid/create-expense/",
-  //require("connect-ensure-login").ensureLoggedIn("/login"),
+  require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result){
     const activity = {id: request.params.activityid}
-    // recup liste participants d'un activity
+    aqueries.getActivityAttendees(activity.id, pool)
+      .then(attendees => {
+          result.render("new_expense", {activity: activity, attendees: attendees.rows})
+      })
     // on passe au render la liste []
 
-    
-    result.render("new_expense")
   }
 
+)
+
+app.post(
+  "/activities/:activityid/create-expense/",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+
+    const activityId = request.params.activityid;
+    const user = request.user.rows[0];
+    const expenseForm = request.body;
+
+    expensesService.createExpense(activityId, user, expenseForm, pool)
+      .then(
+        result.redirect("/activities/"+ activityId +"/expenses")
+      )
+
+
+  }
 )
 
 function isPgSslActive() {
