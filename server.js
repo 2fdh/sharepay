@@ -193,7 +193,7 @@ app.post(
   "/activities/create",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
-    aqueries.createActivity(request.body, pool)
+    aqueries.createActivity(request.body, pool, request.user.rows[0].id)
       .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
       .catch(err => console.warn(err));
   }
