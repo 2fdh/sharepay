@@ -160,32 +160,46 @@ app.get("/health-check", function(request, result) {
     .catch(e => result.send(e));
 });
 
+
+app.get("/activities/history",
+require("connect-ensure-login").ensureLoggedIn("/login"),
+function(request, result) {
+  aqueries.getAllActivitiesHistory(pool,request.user.rows[0].id)
+  .then(resultQuery =>result.render("activities_history",{activities:resultQuery}))
+});
+
+
+
 app.get("/activities/create",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
   result.render("activity_create");
 });
 
-
-app.get("/activities/history",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  aqueries.getAllActivitiesHistory(pool,request.params.profile_id)
-  .then(resultQuery =>result.render("activities_history",{activities:resultQuery}))
-});
-
-
 app.get("/activities/:id",
 require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
-  aqueries.getActivityDetails(request.params.id, pool)
-    .then(res => result.render("activity_details", {
-      activity_id: res.rows[0].id,
-      activity_title: res.rows[0].title,
-      activity_description: res.rows[0].description,
-      activity_status: res.rows[0].status
-    }));
+  Promise.all([
+    aqueries.getActivityDetails(request.params.id, pool),
+    aqueries.getActivityAttendees(request.params.id,pool)
+  ])
+    .then(function(promiseAllResult) {
+        result.render("activity_details", {
+          activity : promiseAllResult[0].rows[0],
+          attendee : promiseAllResult[1].rows[0]
+        })
+      });
 });
+
+app.post(
+  "/activities/create",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.createActivity(request.body, pool, request.user.rows[0].id)
+      .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
+      .catch(err => console.warn(err));
+  }
+)
 
 app.post(
   "/activities/:id",
@@ -197,16 +211,6 @@ app.post(
   }
 )
 
-
-app.post(
-  "/activities/create",
-  require("connect-ensure-login").ensureLoggedIn("/login"),
-  function(request, result) {
-    aqueries.createActivity(request.body, pool, request.user.rows[0].id)
-      .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
-      .catch(err => console.warn(err));
-  }
-)
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {

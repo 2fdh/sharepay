@@ -4,14 +4,14 @@
 
   Activity details  :
 
-  {{ activity_id }}
-  {{ activity_title }}
-  {{ activity_description }}
-  {{ activity_status }}
+  <li>{{ activity.title }}</li>
+  <li>{{ activity.description }}</li>
+  <li>{{ attendee.name }}</li>
 
-
+<form method="POST" action="/activities/{{ activity_id }}">
   <button type="submit">
     Close Activity!
   </button>
+</form>
 
 {% endblock %}
