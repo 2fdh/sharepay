@@ -51,7 +51,7 @@ jobs:
 
       - run:
           name: dump DB
-          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh_test -d sharepay2dfh_test -f ./sql/dump.sql
+          command: sudo psql --host 127.0.0.1 --port 5432 --username sharepay2dfh_test -d sharepay2dfh_test -f ./sql/newdbexport.pgsql
 
       - save_cache:
           paths:
