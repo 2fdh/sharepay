@@ -5,36 +5,41 @@
 <div class="jumbotron">
   <h1 class="display-4">Sharepay</h1>
   <p class="lead">A simple way to manage your activities</p>
+  <small>Powered by 2fdh</small>
 </div>
 
-  <div class="row justify-content-center">
     <form method="POST" action="/create_user">
-      <div class="row justify-content-center">
 
         <div align="center">
           <div class="form-group">
-          <input type="text" name="username" placeholder="email" class="form-control"/>
-        </div>
-
-          <div class="form-group">
-          <input type="password" name="password" placeholder="Password" class="form-control"/>
+          <input type="email" required="required" name="username" placeholder="email" class="form-control"/>
           </div>
 
           <div class="form-group">
-          <input type="firstname" name="firstname" placeholder="firstname" class="form-control"/>
+          <input type="password" name="password" required="required" placeholder="Password" class="form-control"/>
           </div>
 
           <div class="form-group">
-          <input type="lastname" name="lastname" placeholder="lastname" class="form-control"/>
+          <input type="firstname" name="firstname" required="required" placeholder="firstname" class="form-control"/>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg">
+          <div class="form-group">
+          <input type="lastname" name="lastname" placeholder="lastname" required="required" class="form-control"/>
+          </div>
+
+          <button type="submit" class="btn btn-info btn-lg">
             Sign up
           </button>
         </div>
-      </div>
 
   </form>
-  </div>
+
+  <style>
+  .jumbotron {
+      background-image: url(https://images.unsplash.com/photo-1459257831348-f0cdd359235f?auto=format&fit=crop&w=1050&q=80);
+      background-position: 0% 60%;
+      background-size: cover;
+  }
+  </style>
 
 {% endblock %}
