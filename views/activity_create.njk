@@ -16,7 +16,7 @@
   </div>
   <div id="attendee" class="form-group">
     <label for="formGroupExampleInput2">Name of an attendee</label>
-    <input type="text" name="attendee[]" placeholder="Attendee name" class="form-control mb-4">
+    <input type="text" name="attendee[]" required= "required" placeholder="Attendee name" class="form-control mb-4">
   </div>
 
   <script type="text/javascript" >
@@ -26,6 +26,7 @@
              input.name = name;
              input.classList.add(style);
              input.placeholder = "Attendee name";
+             input.required = "required";
              div.appendChild(input);
            }
            function addField() {
