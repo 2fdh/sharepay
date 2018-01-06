@@ -308,6 +308,52 @@ app.get(
       .catch(err => console.warn(err));
   });
 
+//  Balance implementation
+
+app.get(
+  "/activities/:activityid/expenses",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    Promise.all([
+      aqueries.getActivityDetails(request.params.activityid, pool),
+      aqueries.getActivityAttendees(request.params.activityid,pool),
+      expensesService.getExpenses(request.params.activityid, pool),
+    ])
+    .then(function(promiseAllResult) {
+      console.log(promiseAllResult[2]); //undefined
+      promiseAllResult[2].rows.id.map(createTransaction(getExpenseOwner(),10,getExpenseAttendees()));
+    })
+    .then(function(promiseAllResult) {
+        result.render("new_expenses", {
+          activity : promiseAllResult[0].rows[0],
+          attendee : promiseAllResult[1].rows,
+          expenses : promiseAllResult[2].rows
+        })
+      })
+  }
+)
+
+// How it works
+//
+// [expense1,expense2,expense3].map(createTransaction("expenseOwner",10,["attende1","attende2"]))
+// [expenseBis1,expenseBis2,expenseBis3]
+// payback([expenseBis1,expenseBis2,expenseBis3],["attende1","attende2"])
+
+
+
+
+//  Payback algo test
+const { createTransaction, payback } = require('./payback/payback.js');
+const expense1 = createTransaction("roger",10,["roger","bernard"]);
+const expense2 = createTransaction("bernard",40,["roger","bernard"]);
+const transactions = [expense1, expense2];
+console.log(payback(transactions, ["roger", "bernard"]));
+
+//  End of ayback algo test
+
+
+
+
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {
     return false;
