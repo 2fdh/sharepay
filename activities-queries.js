@@ -64,7 +64,7 @@ function createActivity(form, pool,id) {
 
 
 function getActivityDetails(id, pool) {
-  return pool.query("SELECT * from activities WHERE id = $1 ", [id]);
+  return pool.query("SELECT * FROM activities WHERE id = $1 ", [id]);
 }
 
 function getActivityAttendees(activityId,pool){
