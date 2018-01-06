@@ -20,15 +20,15 @@ function getAllActivitiesHistory(pool,id) {
   }
 
 
-function createActivity(form, pool,id) {
+function createActivity(form, pool,user) {
   return pool.query(
       "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id",
       [uuidv4(), form.title, form.description, "Open"]
     )
     .then (resActivityId => {
       return pool.query(
-        "INSERT INTO activities_users VALUES ($1::uuid, $2::uuid) returning activity_id",
-        [resActivityId.rows[0].id,id]
+        "INSERT INTO activities_users VALUES ($1::uuid, $2::uuid) RETURNING activity_id",
+        [resActivityId.rows[0].id,user.id]
       )
     })
     .then(resActivityId => {
@@ -37,17 +37,39 @@ function createActivity(form, pool,id) {
       };
       return joinActivity;
     })
-    .then(resJoinActivity => {
+    .then (resObjActivityId => {
+      return pool.query(
+          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id",
+          [uuidv4(),user.name,user.login]
+        )
+        .then (resAttendeeId => {
+          resObjActivityId.attendeeId = resAttendeeId.rows[0].id;
+          return resObjActivityId;
 
+          })
+        .then(resObjActivityAttendee => {
+          return pool.query(
+            "INSERT INTO activities_attendees VALUES ($1::uuid,$2::uuid) RETURNING activity_id",
+            [resObjActivityAttendee.activityId, resObjActivityAttendee.attendeeId]
+          )
+        })
+        .then(resActivityId => {
+          let ObjActivityId = {
+            activityId: resActivityId.rows[0].activity_id
+          };
+          return ObjActivityId;
+        })
+        .catch(e => console.log(e))
+  })
+    .then(resObjActivity => {
       form.attendee.map(function treatActivityAttributes(element) {
-
              pool.query(
                   "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id",
                   [uuidv4(), element, null]
                 )
                 .then(resAttendeeId => {
-                  resJoinActivity.attendeeId = resAttendeeId.rows[0].id;
-                  return resJoinActivity;
+                  resObjActivity.attendeeId = resAttendeeId.rows[0].id;
+                  return resObjActivity;
                 })
                 .then(resActivityAttendee => {
                   pool.query(
@@ -61,7 +83,6 @@ function createActivity(form, pool,id) {
     })
     .catch(e => console.log(e))
 }
-
 
 function getActivityDetails(id, pool) {
   return pool.query("SELECT * FROM activities WHERE id = $1 ", [id]);
