@@ -181,21 +181,21 @@ app.get("/activities/create",
   });
 
 app.get("/activities/:id",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  Promise.all([
-    aqueries.getActivityDetails(request.params.id, pool),
-    aqueries.getActivityAttendees(request.params.id,pool),
-    expensesService.getExpenses(request.params.id, pool)
-  ])
-    .then(function(promiseAllResult) {
-      const user = request.user.rows[0];
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    Promise.all([
+      aqueries.getActivityDetails(request.params.id, pool),
+      aqueries.getActivityAttendees(request.params.id,pool),
+      expensesService.getExpenses(request.params.id, pool)
+    ])
+      .then(function(promiseAllResult) {
+        const user = request.user.rows[0];
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
           expenses : promiseAllResult[2].rows,
           attendee : promiseAllResult[1].rows,
           user: user
-        })
+        });
       });
   });
 
@@ -227,13 +227,13 @@ app.get(
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result){
     const user = request.user.rows[0];
-    const activity = {id: request.params.activityid}
-    aqueries.getActivityAttendees(request.params.activityid, pool)
-      .then(attendees =>{
-          result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user})
-      })
+    const activity = {id: request.params.activityid};
+    aqueries.getActivityAttendees(activity.id, pool)
+      .then(attendees => {
+        result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user});
+      });
   }
-)
+);
 
 app.post(
   "/activities/:activityid/create-expense/",
@@ -247,9 +247,30 @@ app.post(
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
         result.redirect("/activities/"+ activityId)
-      )
+      );
   }
-)
+);
+
+app.get(
+  "/activities/:activityId/expenses/:expenseId",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    const user = request.user.rows[0];
+    const expenseId = request.params.expenseId;
+    const activityId = request.params.activityId
+
+    expensesService.getExpense(expenseId, pool)
+      .then(expense => {
+        result.render("expense", {
+          expense : expense,
+          user: user,
+          activityId: activityId
+        });
+      });
+  }
+);
+
+
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {

@@ -1,0 +1,34 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+  <div class="form-group">
+    <label for="exampleInputEmail1">Title</label>
+    <input name="title" type="text" class="form-control" value="{{expense.title}}" placeholder="Enter title" disabled>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Amount</label>
+    <input name="amount" type="text" class="form-control" value="{{expense.amount}}" placeholder="Enter amount" disabled>
+  </div>
+
+  <div class="form-group col-md-4">
+    <label for="inputState">debitor</label>
+    <select name="debitor"  id="inputState" class="form-control" disabled>
+      <option selected>{{expense.name}}</option>
+    </select>
+  </div>
+
+  <label>attendees</label>
+
+  {% for attendee in expense.attendees %}
+  <div>
+    <div>
+      <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendee.id}}" disabled checked>
+      <label class="custom-control-label" for="customCheck1">{{attendee.name}}</label>
+    </div>
+  </div>
+  {% endfor %}
+
+<a class="btn btn-outline-secondary" href="/activities/{{activityId}}" role="button">Back</a>
+
+{% endblock %}

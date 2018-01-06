@@ -32,6 +32,7 @@ Activity details  :
       <td>{{ expense.title }}</td>
       <td>{{ expense.date }}</td>
       <td>{{ expense.amount/100 }} €</td>
+      <td><a class="btn btn-outline-secondary" href="/activities/{{ activity.id }}/expenses/{{expense.id}}" role="button">view expense</a></td>
     </tr>
   {% endfor %}
   </tbody>
