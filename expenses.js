@@ -41,9 +41,11 @@ function getExpense(expenseId, pool){
         const fullExpense = simpleExpense.rows[0];
         fullExpense.attendees = attendees.rows;
         return fullExpense;
-      });
+      })
+      .catch(e => console.log(e));
   }
-  );
+  )
+    .catch(e => console.log(e));
 }
 
 function getExpenseAttendees(expenseId, pool) {

@@ -308,7 +308,6 @@ app.get(
       .catch(err => console.warn(err));
   });
 
-//  Balance implementation
 
 app.get(
   "/activities/:activityid/expenses",
@@ -335,21 +334,36 @@ app.get(
 
 // How it works
 //
-// [expense1,expense2,expense3].map(createTransaction("expenseOwner",10,["attende1","attende2"]))
+// [expense1,expense2,expense3].map(createTransaction("expensedebitor",10,["attende1","attende2"]))
+//
 // [expenseBis1,expenseBis2,expenseBis3]
+//
 // payback([expenseBis1,expenseBis2,expenseBis3],["attende1","attende2"])
-
+//
 
 
 
 //  Payback algo test
-const { createTransaction, payback } = require('./payback/payback.js');
+const { createTransaction, payback } = require("./payback/payback.js");
 const expense1 = createTransaction("roger",10,["roger","bernard"]);
-const expense2 = createTransaction("bernard",40,["roger","bernard"]);
+const expense2 = createTransaction("bernard",50,["roger","bernard"]);
 const transactions = [expense1, expense2];
+
 console.log(payback(transactions, ["roger", "bernard"]));
 
 //  End of ayback algo test
+
+expensesService.getExpenses("e28022df-9727-4a98-ab86-12bf9021050f", pool)
+  .then(expenses => {
+    console.log(expenses);
+    expenses.rows.map(expense => expensesService.getExpense(expense.id, pool));
+  })
+  .then(res => console.log(res))
+  .catch(e => console.log(e));
+
+
+
+
 
 
 
