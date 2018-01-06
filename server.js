@@ -163,8 +163,12 @@ app.get("/health-check", function(request, result) {
 app.get("/activities/history",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
+    const user = request.user.rows[0];
     aqueries.getAllActivitiesHistory(pool,request.user.rows[0].id)
-      .then(resultQuery =>result.render("activities_history",{activities:resultQuery}));
+      .then(resultQuery =>result.render("activities_history",{
+        activities:resultQuery,
+        user: user
+      }));
   });
 
 
@@ -172,7 +176,8 @@ app.get("/activities/history",
 app.get("/activities/create",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
-    result.render("activity_create");
+    const user = request.user.rows[0];
+    result.render("activity_create", {user: user});
   });
 
 app.get("/activities/:id",
@@ -184,10 +189,12 @@ function(request, result) {
     expensesService.getExpenses(request.params.id, pool)
   ])
     .then(function(promiseAllResult) {
+      const user = request.user.rows[0];
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
           expenses : promiseAllResult[2].rows,
-          attendee : promiseAllResult[1].rows
+          attendee : promiseAllResult[1].rows,
+          user: user
         })
       });
   });
@@ -219,10 +226,11 @@ app.get(
   "/activities/:activityid/create-expense/",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result){
+    const user = request.user.rows[0];
     const activity = {id: request.params.activityid}
     aqueries.getActivityAttendees(activity.id, pool)
       .then(attendees => {
-          result.render("new_expense", {activity: activity, attendees: attendees})
+          result.render("new_expense", {activity: activity, attendees: attendees, user: user})
       })
   }
 )
