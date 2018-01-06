@@ -59,29 +59,29 @@ function createActivity(form, pool,user) {
           };
           return ObjActivityId;
         })
-        .catch(e => console.log(e))
-  })
+        .catch(e => console.log(e));
+});
     .then(resObjActivity => {
       form.attendee.map(function treatActivityAttributes(element) {
-             pool.query(
-                  "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id",
-                  [uuidv4(), element, null]
-                )
-                .then(resAttendeeId => {
-                  resObjActivity.attendeeId = resAttendeeId.rows[0].id;
-                  return resObjActivity;
-                })
-                .then(resActivityAttendee => {
-                  pool.query(
-                    "INSERT INTO activities_attendees VALUES ($1::uuid,$2::uuid)",
-                    [resActivityAttendee.activityId, resActivityAttendee.attendeeId]
-                  )
-                }
-                )
-                .catch(e => console.log(e))
+        pool.query(
+          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id",
+          [uuidv4(), element, null]
+        )
+          .then(resAttendeeId => {
+            resObjActivity.attendeeId = resAttendeeId.rows[0].id;
+            return resObjActivity;
           })
+          .then(resActivityAttendee => {
+            pool.query(
+              "INSERT INTO activities_attendees VALUES ($1::uuid,$2::uuid)",
+              [resActivityAttendee.activityId, resActivityAttendee.attendeeId]
+            );
+          }
+          )
+          .catch(e => console.log(e));
+      });
     })
-    .catch(e => console.log(e))
+    .catch(e => console.log(e));
 }
 
 function getActivityDetails(id, pool) {
@@ -91,14 +91,14 @@ function getActivityDetails(id, pool) {
 function getActivityAttendees(activityId,pool){
   return pool.query(
     "SELECT name, attendees.id, activities_attendees.attendee_id FROM attendees INNER JOIN activities_attendees ON activities_attendees.attendee_id=attendees.id WHERE activities_attendees.activity_id= ($1::uuid)",
-    [activityId])
+    [activityId]);
 }
 
 function closeActivity(activityId, pool) {
   return pool.query(
     "UPDATE activities SET status='Close' WHERE id=($1::uuid)",
     [activityId]
-  )
+  );
 }
 
 module.exports = {
