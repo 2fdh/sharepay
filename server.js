@@ -222,7 +222,7 @@ app.get(
     const activity = {id: request.params.activityid}
     aqueries.getActivityAttendees(activity.id, pool)
       .then(attendees => {
-          result.render("new_expense", {activity: activity, attendees: attendees.rows})
+          result.render("new_expense", {activity: activity, attendees: attendees})
       })
   }
 )
