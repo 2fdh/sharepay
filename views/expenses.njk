@@ -2,21 +2,22 @@
 
 {% block content %}
 
-Activity details  :
+<div class="jumbotron">
+  <h1 class="display-4">{{ activity.title }}</h1>
+  <p class="lead">{{ activity.description }}</p>
+</div>
 
-<li>{{ activity.title }}</li>
-<li>{{ activity.description }}</li>
+<h3>Participants:</h3>
 
 {% for att in attendee %}
-<li>{{ att.name }}</li>
+
+<ul class="list-group">
+  <li class="list-group-item">{{ att.name }}</li>
+</ul>
 
 {% endfor %}
 
-<form method="POST" action="/activities/{{ activity.id }}">
-  <button type="submit">
-    Close Activity!
-  </button>
-</form>
+<h3>Expenses:</h3>
 
 <table class="table">
   <thead>
@@ -27,7 +28,9 @@ Activity details  :
     </tr>
   </thead>
   <tbody>
+
     {% for expense in expenses %}
+
     <tr>
       <td>{{ expense.title }}</td>
       <td>{{ expense.date }}</td>
@@ -39,8 +42,20 @@ Activity details  :
 </table>
 
 <form method="GET" action="/activities/{{ activity.id }}/create-expense/">
-  <button type="submit">
+  <button type="submit" class="btn btn-info mb-3">
     Create a new expense
+  </button>
+</form>
+
+<form method="GET" action="/activities/{{ activity.id }}/create-expense/">
+  <button type="submit" class="btn btn-info mb-3">
+    Check out!
+  </button>
+</form>
+
+<form method="POST" action="/activities/{{ activity.id }}">
+  <button type="submit" class="btn btn-danger">
+    Close Activity!
   </button>
 </form>
 

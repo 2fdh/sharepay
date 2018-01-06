@@ -1,11 +1,11 @@
 {% extends "layout.njk" %}
 
 {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">{{ activity.title }}</h1>
+  <p class="lead">{{ activity.description }}</p>
+</div>
 
-  Activity details  :
-
-  <li>{{ activity.title }}</li>
-  <li>{{ activity.description }}</li>
 
   {% for att in attendee %}
   <li>{{ att.name }}</li>

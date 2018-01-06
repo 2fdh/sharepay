@@ -60,7 +60,7 @@ function createActivity(form, pool,user) {
           return ObjActivityId;
         })
         .catch(e => console.log(e));
-});
+})
     .then(resObjActivity => {
       form.attendee.map(function treatActivityAttributes(element) {
         pool.query(
