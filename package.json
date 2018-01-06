@@ -2,7 +2,7 @@
   "name": "nfdh",
   "version": "0.0.1",
   "description": "the best sharepay",
-  "main": "server.js",
+  "main": ".eslintrc.js",
   "scripts": {
     "start": "node server.js",
     "test": "jest --coverage"

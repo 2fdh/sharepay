@@ -9,9 +9,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
 const FB = require("fb");
 
-const {
-  Pool
-} = require('pg')
+const { Pool } = require("pg");
 
 const app = express();
 app.use(require("body-parser").urlencoded({
@@ -23,7 +21,7 @@ const port = process.env.PORT || 3000;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: isPgSslActive()
-})
+});
 
 nunjucks.configure("views", {
   autoescape: true,
@@ -53,9 +51,9 @@ passport.serializeUser(function(user, callback) {
 
 passport.deserializeUser(function(id, callback) {
   return usersService.findUserById(id, pool).then(user => {
-    callback(null, user)
+    callback(null, user);
   });
-})
+});
 
 
 passport.use(
@@ -79,20 +77,20 @@ passport.use(
       callbackURL: process.env.REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, callback) {
-   FB.api(
-     "me",
-     { fields: "id,name,email", access_token: accessToken },
-     function(user) {
-       usersService.findOrCreateFbUser(user, pool)
-         .then(user => {
-           callback(null, user);
-         })
-         .catch(error => {
-           callback(error);
-         })
-     }
-   );
- }
+      FB.api(
+        "me",
+        { fields: "id,name,email", access_token: accessToken },
+        function(user) {
+          usersService.findOrCreateFbUser(user, pool)
+            .then(user => {
+              callback(null, user);
+            })
+            .catch(error => {
+              callback(error);
+            });
+        }
+      );
+    }
   )
 );
 
@@ -140,13 +138,13 @@ app.get("/profiles/:profile_id",
       usersService.getUser(request.params.profile_id, pool),
       aqueries.getAllActivities(pool,request.params.profile_id)
     ])
-    .then(function(promiseAllResult) {
+      .then(function(promiseAllResult) {
         result.render("profiles", {
           user : promiseAllResult[0].rows[0],
           activities : promiseAllResult[1]
-        })
+        });
       })
-    .catch(e => result.redirect("/signup"));
+      .catch(() => result.redirect("/signup"));
   });
 
 app.post("/create_user", function(request, result) {
@@ -157,25 +155,25 @@ app.post("/create_user", function(request, result) {
 
 app.get("/health-check", function(request, result) {
   utils.healthCheck(pool)
-    .then(resultQuery => result.json({message: "everything goes well"}))
+    .then(() => result.json({message: "everything goes well"}))
     .catch(e => result.send(e));
 });
 
 
 app.get("/activities/history",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  aqueries.getAllActivitiesHistory(pool,request.user.rows[0].id)
-  .then(resultQuery =>result.render("activities_history",{activities:resultQuery}))
-});
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.getAllActivitiesHistory(pool,request.user.rows[0].id)
+      .then(resultQuery =>result.render("activities_history",{activities:resultQuery}));
+  });
 
 
 
 app.get("/activities/create",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  result.render("activity_create");
-});
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    result.render("activity_create");
+  });
 
 app.get("/activities/:id",
 require("connect-ensure-login").ensureLoggedIn("/login"),
@@ -190,7 +188,7 @@ function(request, result) {
           expenses : promiseAllResult[1].rows
         })
       });
-});
+  });
 
 
 
@@ -199,20 +197,20 @@ app.post(
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
     aqueries.createActivity(request.body, pool, request.user.rows[0].id)
-      .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
+      .then(() => result.redirect("/profiles/"+ request.user.rows[0].id))
       .catch(err => console.warn(err));
   }
-)
+);
 
 app.post(
   "/activities/:id",
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
     aqueries.closeActivity(request.params.id,pool)
-    .then(res => result.redirect("/profiles/"+ request.user.rows[0].id))
-    .catch(err => console.warn(err));
+      .then(() => result.redirect("/profiles/"+ request.user.rows[0].id))
+      .catch(err => console.warn(err));
   }
-)
+);
 
 
 app.get(
