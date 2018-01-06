@@ -180,12 +180,14 @@ require("connect-ensure-login").ensureLoggedIn("/login"),
 function(request, result) {
   Promise.all([
     aqueries.getActivityDetails(request.params.id, pool),
+    aqueries.getActivityAttendees(request.params.id,pool),
     expensesService.getExpenses(request.params.id, pool)
   ])
     .then(function(promiseAllResult) {
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
-          expenses : promiseAllResult[1].rows
+          expenses : promiseAllResult[2].rows,
+          attendee : promiseAllResult[1].rows
         })
       });
   });
