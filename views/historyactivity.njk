@@ -1,0 +1,36 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+Activity details  :
+
+<li>{{ activity.title }}</li>
+<li>{{ activity.description }}</li>
+
+<form method="POST" action="/activities/history/{{ activity.id }}">
+  <button type="submit">
+    Re-Open Activity!
+  </button>
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Date</th>
+      <th scope="col">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for expense in expenses %}
+    <tr>
+      <td>{{ expense.title }}</td>
+      <td>{{ expense.date }}</td>
+      <td>{{ expense.amount/100 }} €</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

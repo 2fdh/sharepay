@@ -21,7 +21,7 @@
   <h4 class="card-title">{{activity.title}}</h4>
   <p class="card-text">{{Activity.description}}</p>
   <a href="/activities/{{activity.id}}" class="btn btn-info">Details</a>
-  <a href="???" class="btn btn-info">Check-out</a>
+  <a href="/activities/{{activity.id}}/balance" class="btn btn-info">Check-out</a>
   <form method="POST" action="/activities/{{ activity.id }}">
     <button type="submit" class="btn btn-danger">
       Close

@@ -101,11 +101,19 @@ function closeActivity(activityId, pool) {
   );
 }
 
+function reOpenActivity(activityId, pool) {
+  return pool.query(
+    "UPDATE activities SET status='Open' WHERE id=($1::uuid)",
+    [activityId]
+  )
+}
+
 module.exports = {
   getAllActivities: getAllActivities,
   createActivity: createActivity,
   getActivityDetails: getActivityDetails,
   getAllActivitiesHistory:getAllActivitiesHistory,
   closeActivity:closeActivity,
-  getActivityAttendees:getActivityAttendees
+  getActivityAttendees:getActivityAttendees,
+  reOpenActivity:reOpenActivity
 };

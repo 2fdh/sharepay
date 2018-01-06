@@ -150,7 +150,7 @@ app.get("/profiles/:profile_id",
 app.post("/create_user", function(request, result) {
   usersService.createUser(request.body, pool)
     .then(res => result.redirect("/profiles/" + res.rows[0].id))
-    .catch(e => console.log(e.stack));
+    .catch(e => console.warn(e.stack));
 });
 
 app.get("/health-check", function(request, result) {
@@ -158,6 +158,18 @@ app.get("/health-check", function(request, result) {
     .then(() => result.json({message: "everything goes well"}))
     .catch(e => result.send(e));
 });
+
+
+
+app.post(
+  "/activities/history/:id",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    aqueries.reOpenActivity(request.params.id,pool)
+      .then(() => result.redirect("/activities/"+ request.params.id))
+      .catch(err => console.warn(err));
+  }
+);
 
 
 app.get("/activities/history",
@@ -168,7 +180,8 @@ app.get("/activities/history",
       .then(resultQuery =>result.render("activities_history",{
         activities:resultQuery,
         user: user
-      }));
+      }))
+      .catch(err => console.warn(err));
   });
 
 
@@ -196,7 +209,8 @@ app.get("/activities/:id",
           attendee : promiseAllResult[1].rows,
           user: user
         });
-      });
+      })
+      .catch(err => console.warn(err));
   });
 
 
@@ -228,10 +242,11 @@ app.get(
   function(request, result){
     const user = request.user.rows[0];
     const activity = {id: request.params.activityid};
-    aqueries.getActivityAttendees(activity.id, pool)
+    aqueries.getActivityAttendees(request.params.activityid, pool)
       .then(attendees => {
         result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user});
-      });
+      })
+      .catch(err => console.warn(err));
   }
 );
 
@@ -247,7 +262,8 @@ app.post(
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
         result.redirect("/activities/"+ activityId)
-      );
+      )
+      .catch(err => console.warn(err));
   }
 );
 
@@ -266,11 +282,32 @@ app.get(
           user: user,
           activityId: activityId
         });
-      });
+      })
+      .catch(err => console.warn(err));
   }
 );
 
-
+app.get(
+  "/activities/history/:activityId",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    Promise.all([
+      aqueries.getActivityDetails(request.params.id, pool),
+      aqueries.getActivityAttendees(request.params.id,pool),
+      expensesService.getExpenses(request.params.id, pool)
+    ])
+      .then(function(promiseAllResult) {
+        const user = request.user.rows[0];
+        result.render("historyactivity", {
+          activity : promiseAllResult[0].rows[0],
+          expenses : promiseAllResult[2].rows,
+          attendee : promiseAllResult[1].rows,
+          user: user
+        });
+      })
+      .catch(err => console.warn(err))
+    }
+)
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {
