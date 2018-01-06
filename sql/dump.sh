@@ -10,3 +10,4 @@ psql --username $1 -d sharepay2fdh_test -c "DROP TABLE IF EXISTS activities;"
 psql --host 127.0.0.1 --port 5432 --username $1 -d sharepay2fdh_test -f ./newdbexport.pgsql
 
 psql --username $1 -d sharepay2fdh_test -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO sharepay2fdh_test;"
+psql --username $1 -d sharepay2fdh_test -c "ALTER ROLE sharepay2fdh_test WITH LOGIN" 
