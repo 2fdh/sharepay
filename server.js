@@ -181,21 +181,21 @@ app.get("/activities/create",
   });
 
 app.get("/activities/:id",
-require("connect-ensure-login").ensureLoggedIn("/login"),
-function(request, result) {
-  Promise.all([
-    aqueries.getActivityDetails(request.params.id, pool),
-    aqueries.getActivityAttendees(request.params.id,pool),
-    expensesService.getExpenses(request.params.id, pool)
-  ])
-    .then(function(promiseAllResult) {
-      const user = request.user.rows[0];
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result) {
+    Promise.all([
+      aqueries.getActivityDetails(request.params.id, pool),
+      aqueries.getActivityAttendees(request.params.id,pool),
+      expensesService.getExpenses(request.params.id, pool)
+    ])
+      .then(function(promiseAllResult) {
+        const user = request.user.rows[0];
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
           expenses : promiseAllResult[2].rows,
           attendee : promiseAllResult[1].rows,
           user: user
-        })
+        });
       });
   });
 
@@ -257,11 +257,16 @@ app.get(
   function(request, result){
     const user = request.user.rows[0];
     const expenseId = request.params.expenseId;
+    const activityId = request.params.activityId
 
     expensesService.getExpense(expenseId, pool)
-      .then(expense =>
-        result.render("expense", {expense: expense, user: user})
-      );
+      .then(expense => {
+        result.render("expense", {
+          expense : expense,
+          user: user,
+          activityId: activityId
+        });
+      });
   }
 );
 
