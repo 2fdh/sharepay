@@ -227,13 +227,13 @@ app.get(
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result){
     const user = request.user.rows[0];
-    const activity = {id: request.params.activityid}
-    aqueries.getActivityAttendees(request.params.activityid, pool)
-      .then(attendees =>{
-          result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user})
-      })
+    const activity = {id: request.params.activityid};
+    aqueries.getActivityAttendees(activity.id, pool)
+      .then(attendees => {
+        result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user});
+      });
   }
-)
+);
 
 app.post(
   "/activities/:activityid/create-expense/",
@@ -247,9 +247,25 @@ app.post(
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
         result.redirect("/activities/"+ activityId)
-      )
+      );
   }
-)
+);
+
+app.get(
+  "/activities/:activityId/expenses/:expenseId",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    const user = request.user.rows[0];
+    const expenseId = request.params.expenseId;
+
+    expensesService.getExpense(expenseId, pool)
+      .then(expense =>
+        result.render("expense", {expense: expense, user: user})
+      );
+  }
+);
+
+
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {
