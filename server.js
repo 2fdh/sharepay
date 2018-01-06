@@ -345,20 +345,28 @@ app.get(
 
 //  Payback algo test
 const { createTransaction, payback } = require("./payback/payback.js");
-const expense1 = createTransaction("roger",10,["roger","bernard"]);
-const expense2 = createTransaction("bernard",50,["roger","bernard"]);
-const transactions = [expense1, expense2];
+// const expense1 = createTransaction("Durand",10,[ 'Dubois', 'Durand', 'Martin', 'Michu' ]);
+// const expense2 = createTransaction("Dubois",50,[ 'Dubois', 'Martin', 'Durand', 'Michu' ]);
+// const expense3 = createTransaction("Martin",20,[ 'Durand', 'Martin', 'Dubois', 'Michu' ]);
+// const expense4 = createTransaction("Michu",60,[ 'Dubois', 'Martin', 'Michu', 'Durand' ]);
+// const transactions = [expense1, expense2, expense3, expense4];
+//
+// console.log(payback(transactions, ['Dubois', 'Durand', 'Martin', 'Michu']));
 
-console.log(payback(transactions, ["roger", "bernard"]));
+ // End of ayback algo test
 
-//  End of ayback algo test
-
-expensesService.getExpenses("e28022df-9727-4a98-ab86-12bf9021050f", pool)
+expensesService.getExpenses("768971fa-5db2-40c8-9da0-d3bc98f7209b", pool)
   .then(expenses => {
-    console.log(expenses);
-    expenses.rows.map(expense => expensesService.getExpense(expense.id, pool));
+    // console.log(expenses);
+    return Promise.all(
+      expenses.rows.map(expense => {
+        return expensesService.getExpense(expense.id, pool);
+      })
+    );
   })
-  .then(res => console.log(res))
+  .then(arrayOfFullExpenses => arrayOfFullExpenses.map(expense => createTransaction(expense.name, expense.amount, expense.attendees.map(attendee => attendee.name))))
+  .then(res => console.log(payback(res, ["Dubois", "Bilal", "Joachim", "Jim"])))
+
   .catch(e => console.log(e));
 
 
