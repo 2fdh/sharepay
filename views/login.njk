@@ -5,22 +5,22 @@
 <div class="jumbotron">
   <h1 class="display-4">Sharepay</h1>
   <p class="lead">A simple way to manage your activities</p>
-
+  <small>Powered by 2fdh</small>
 </div>
 
 <div class="row justify-content-around">
   <form class="form-inline" method="POST" action="/authenticate">
 
       <div class="col-md-5 mb-3">
-        <input type="text" name="username" class="form-control is-valid" id="validationServer03" placeholder="email" required>
+        <input type="email" name="username" class="form-control" id="validationServer03" placeholder="email" required>
       </div>
 
       <div class="col-md-5 mb-3">
-        <input type="password" name="password" class="form-control is-valid" id="validationServer03" placeholder="password" required>
+        <input type="password" name="password" class="form-control" id="validationServer03" placeholder="password" required>
       </div>
 
       <div class="col-md-2 mb-3">
-        <button type="submit" class="btn btn-secondary">
+        <button type="submit" class="btn btn-info">
           Sign in
         </button>
       </div>
@@ -41,8 +41,15 @@
 
 <div class="row justify-content-around">
 
-  <a class="btn btn-primary btn-lg" href="/signup" role="button">Create account</a>
+  <a class="btn btn-info btn-lg" href="/signup" role="button">Create account</a>
 </div>
 
+<style>
+.jumbotron {
+    background-image: url(https://images.unsplash.com/photo-1459257831348-f0cdd359235f?auto=format&fit=crop&w=1050&q=80);
+    background-position: 0% 60%;
+    background-size: cover;
+}
+</style>
 
 {% endblock %}
