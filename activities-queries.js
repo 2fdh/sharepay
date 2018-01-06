@@ -1,34 +1,30 @@
 const utils = require("./utils.js");
 const uuidv4 = require('uuid/v4');
 
-function getAllActivities(pool,id) {
+function getAllActivities(pool, id) {
   return pool.query(
-    "SELECT * FROM activities inner join activities_users on activities_users.activity_id=activities.id where status='Open' and activities_users.user_id=$1",
-    [id]
-  )
-    .then (resultQuery => resultQuery.rows)
-    .catch(e => console.log(e))
-  }
-
-function getAllActivitiesHistory(pool,id) {
-  return pool.query(
-    "SELECT * FROM activities INNER JOIN activities_users on activities_users.activity_id=activities.id WHERE status='Close' AND activities_users.user_id=$1",
-    [id]
-  )
-    .then (resultQuery => resultQuery.rows)
-    .catch(e => console.log(e))
-  }
-
-
-function createActivity(form, pool,user) {
-  return pool.query(
-      "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id",
-      [uuidv4(), form.title, form.description, "Open"]
+      "SELECT * FROM activities inner join activities_users on activities_users.activity_id=activities.id where status='Open' and activities_users.user_id=$1", [id]
     )
-    .then (resActivityId => {
+    .then(resultQuery => resultQuery.rows)
+    .catch(e => console.log(e))
+}
+
+function getAllActivitiesHistory(pool, id) {
+  return pool.query(
+      "SELECT * FROM activities INNER JOIN activities_users on activities_users.activity_id=activities.id WHERE status='Close' AND activities_users.user_id=$1", [id]
+    )
+    .then(resultQuery => resultQuery.rows)
+    .catch(e => console.log(e))
+}
+
+
+function createActivity(form, pool, user) {
+  return pool.query(
+      "INSERT INTO activities (id,title,description,status) VALUES ($1::uuid,$2::text,$3::text,$4::text) RETURNING id", [uuidv4(), form.title, form.description, "Open"]
+    )
+    .then(resActivityId => {
       return pool.query(
-        "INSERT INTO activities_users VALUES ($1::uuid, $2::uuid) RETURNING activity_id",
-        [resActivityId.rows[0].id,user.id]
+        "INSERT INTO activities_users VALUES ($1::uuid, $2::uuid) RETURNING activity_id", [resActivityId.rows[0].id, user.id]
       )
     })
     .then(resActivityId => {
@@ -37,20 +33,18 @@ function createActivity(form, pool,user) {
       };
       return joinActivity;
     })
-    .then (resObjActivityId => {
+    .then(resObjActivityId => {
       return pool.query(
-          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id",
-          [uuidv4(),user.name,user.login]
+          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id", [uuidv4(), user.name, user.login]
         )
-        .then (resAttendeeId => {
+        .then(resAttendeeId => {
           resObjActivityId.attendeeId = resAttendeeId.rows[0].id;
           return resObjActivityId;
 
-          })
+        })
         .then(resObjActivityAttendee => {
           return pool.query(
-            "INSERT INTO activities_attendees VALUES ($1::uuid,$2::uuid) RETURNING activity_id",
-            [resObjActivityAttendee.activityId, resObjActivityAttendee.attendeeId]
+            "INSERT INTO activities_attendees VALUES ($1::uuid,$2::uuid) RETURNING activity_id", [resObjActivityAttendee.activityId, resObjActivityAttendee.attendeeId]
           )
         })
         .then(resActivityId => {
@@ -88,17 +82,15 @@ function getActivityDetails(id, pool) {
   return pool.query("SELECT * FROM activities WHERE id = $1 ", [id]);
 }
 
-function getActivityAttendees(activityId,pool){
+function getActivityAttendees(activityId, pool) {
   return pool.query(
-    "SELECT name, attendees.id, activities_attendees.attendee_id FROM attendees INNER JOIN activities_attendees ON activities_attendees.attendee_id=attendees.id WHERE activities_attendees.activity_id= ($1::uuid)",
-    [activityId]);
+    "SELECT name, attendees.id, activities_attendees.attendee_id FROM attendees INNER JOIN activities_attendees ON activities_attendees.attendee_id=attendees.id WHERE activities_attendees.activity_id= ($1::uuid)", [activityId])
 }
 
 function closeActivity(activityId, pool) {
   return pool.query(
-    "UPDATE activities SET status='Close' WHERE id=($1::uuid)",
-    [activityId]
-  );
+    "UPDATE activities SET status='Close' WHERE id=($1::uuid)", [activityId]
+  )
 }
 
 function reOpenActivity(activityId, pool) {
