@@ -3,9 +3,9 @@ const { Pool } = require('pg')
 const sha256 = require('js-sha256');
 
 const pool = new Pool({
-  user: 'sharepay2dfh_test',
+  user: 'sharepay2fdh_test',
   host: 'localhost',
-  database: 'sharepay2dfh_test',
+  database: 'sharepay2fdh_test',
   password: '',
   port: 5432,
 })

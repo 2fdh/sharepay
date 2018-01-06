@@ -1,0 +1,41 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<form method="POST" action="/activities/{{ activity.id }}/create-expense/">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Title</label>
+    <input name="title" type="text" class="form-control"  placeholder="Enter title">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Amount</label>
+    <input name="amount" type="text" class="form-control" placeholder="Enter amount">
+  </div>
+
+  <div class="form-group col-md-4">
+    <label for="inputState">debitor</label>
+    <select name="debitor"  id="inputState" class="form-control">
+      <option selected>Choose...</option>
+      {% for attendee in attendees %}
+      <option value="{{attendee.id}}">{{attendee.name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+<label>attendees</label>
+
+  {% for attendee in attendees %}
+  <div>
+    <div>
+      <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendee.id}}">
+      <label class="custom-control-label" for="customCheck1">{{attendee.name}}</label>
+    </div>
+  </div>
+
+  {% endfor %}
+
+    <button type="submit">
+      Create a new expense
+    </button>
+</form>
+
+{% endblock %}
