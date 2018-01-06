@@ -224,10 +224,7 @@ app.get(
       .then(attendees => {
           result.render("new_expense", {activity: activity, attendees: attendees.rows})
       })
-    // on passe au render la liste []
-
   }
-
 )
 
 app.post(
@@ -238,14 +235,11 @@ app.post(
     const activityId = request.params.activityid;
     const user = request.user.rows[0];
     const expenseForm = request.body;
-    console.log(expenseForm);
 
     expensesService.createExpense(activityId, user, expenseForm, pool)
       .then(
         result.redirect("/activities/"+ activityId)
       )
-
-
   }
 )
 
