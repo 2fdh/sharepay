@@ -9,6 +9,11 @@ function getExpenses(activityId, pool){
 }
 
 function createExpense(activityId, user, expenseForm, pool){
+  console.log(activityId);
+  console.log(user);
+  console.log(expenseForm);
+
+
   return pool.query(
     "INSERT INTO expenses (id, title, date, amount, activity_id, payer_id) VALUES ($1::uuid, $2::text, $3::date, $4::integer, $5::uuid, $6::uuid) RETURNING id",
     [uuidv4(), expenseForm.title, new Date(), expenseForm.amount.replace(/,/g, ".") * 100, activityId, expenseForm.debitor]

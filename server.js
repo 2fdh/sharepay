@@ -2,7 +2,7 @@ const express = require("express");
 const utils = require("./utils.js");
 const nunjucks = require("nunjucks");
 const aqueries = require("./activities-queries.js");
-const usersService = require("./users.js")
+const usersService = require("./users.js");
 const expensesService = require("./expenses.js");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -257,7 +257,7 @@ app.get(
   function(request, result){
     const user = request.user.rows[0];
     const expenseId = request.params.expenseId;
-    const activityId = request.params.activityId
+    const activityId = request.params.activityId;
 
     expensesService.getExpense(expenseId, pool)
       .then(expense => {
