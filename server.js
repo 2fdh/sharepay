@@ -228,9 +228,9 @@ app.get(
   function(request, result){
     const user = request.user.rows[0];
     const activity = {id: request.params.activityid}
-    aqueries.getActivityAttendees(activity.id, pool)
-      .then(attendees => {
-          result.render("new_expense", {activity: activity, attendees: attendees, user: user})
+    aqueries.getActivityAttendees(request.params.activityid, pool)
+      .then(attendees =>{
+          result.render("new_expense", {activity: activity, attendees: attendees.rows, user: user})
       })
   }
 )

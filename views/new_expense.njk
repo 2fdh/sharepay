@@ -12,11 +12,11 @@
   </div>
 
   <div class="form-group col-md-4">
-    <label for="inputState">debitor</label>
+    <label for="inputState">Debitor</label>
     <select name="debitor"  id="inputState" class="form-control">
       <option selected>Choose...</option>
       {% for attendee in attendees %}
-      <option value="{{attendee.id}}">{{attendee.name}}</option>
+      <option value="{{attendees.id}}">{{attendee.name}}</option>
       {% endfor %}
     </select>
   </div>
@@ -26,7 +26,7 @@
   {% for attendee in attendees %}
   <div>
     <div>
-      <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendee.id}}">
+      <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendees.id}}">
       <label class="custom-control-label" for="customCheck1">{{attendee.name}}</label>
     </div>
   </div>
