@@ -292,9 +292,9 @@ app.get(
   require("connect-ensure-login").ensureLoggedIn("/login"),
   function(request, result) {
     Promise.all([
-      aqueries.getActivityDetails(request.params.id, pool),
-      aqueries.getActivityAttendees(request.params.id,pool),
-      expensesService.getExpenses(request.params.id, pool)
+      aqueries.getActivityDetails(request.params.activityId, pool),
+      aqueries.getActivityAttendees(request.params.activityId,pool),
+      expensesService.getExpenses(request.params.activityId, pool)
     ])
       .then(function(promiseAllResult) {
         const user = request.user.rows[0];
@@ -305,9 +305,8 @@ app.get(
           user: user
         });
       })
-      .catch(err => console.warn(err))
-    }
-)
+      .catch(err => console.warn(err));
+  });
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {

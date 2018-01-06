@@ -2,16 +2,22 @@
 
 {% block content %}
 
-Activity details  :
+<div class="jumbotron">
+  <h1 class="display-4">{{ activity.title }}</h1>
+  <p class="lead">{{ activity.description }}</p>
+</div>
 
-<li>{{ activity.title }}</li>
-<li>{{ activity.description }}</li>
+<h3>Participants:</h3>
 
-<form method="POST" action="/activities/history/{{ activity.id }}">
-  <button type="submit">
-    Re-Open Activity!
-  </button>
-</form>
+{% for att in attendee %}
+
+<ul class="list-group">
+  <li class="list-group-item">{{ att.name }}</li>
+</ul>
+
+{% endfor %}
+
+<h3>Expenses:</h3>
 
 <table class="table">
   <thead>
@@ -22,7 +28,9 @@ Activity details  :
     </tr>
   </thead>
   <tbody>
+
     {% for expense in expenses %}
+
     <tr>
       <td>{{ expense.title }}</td>
       <td>{{ expense.date }}</td>
@@ -32,5 +40,12 @@ Activity details  :
   </tbody>
 </table>
 
+
+
+<form method="POST" action="/activities/history/{{ activity.id }}">
+  <button type="submit" class="btn btn-danger">
+    reOpen Activity!
+  </button>
+</form>
 
 {% endblock %}
