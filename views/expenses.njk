@@ -2,22 +2,23 @@
 
 {% block content %}
 
-<div class="jumbotron">
-  <h1 class="display-4">{{ activity.title }}</h1>
-  <p class="lead">{{ activity.description }}</p>
-</div>
+<br />
 
-<h3>Participants:</h3>
+  <h4 class="card-title">{{activity.title}}</h4>
+  <p class="card-text">{{activity.description}}</p>
+  <h6> Attendees </h6>
 
-{% for att in attendee %}
+  <ul class="list-unstyled">
 
-<ul class="list-group">
-  <li class="list-group-item">{{ att.name }}</li>
-</ul>
+  {% for att in attendee %}
+    <li class="float-left mr-1">{{ att.name }} </li>
+    {% endfor %}
 
-{% endfor %}
+  </ul>
 
-<h3>Expenses:</h3>
+
+<br />
+<h3>Expenses</h3>
 
 <table class="table">
   <thead>
@@ -25,6 +26,7 @@
       <th scope="col">Title</th>
       <th scope="col">Date</th>
       <th scope="col">Amount</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -47,16 +49,39 @@
   </button>
 </form>
 
-<form method="GET" action="/activities/{{ activity.id }}/create-expense/">
-  <button type="submit" class="btn btn-info mb-3">
-    Check out!
-  </button>
-</form>
+<br />
+
+<h3>Balance </h3>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">From</th>
+      <th scope="col">To</th>
+      <th scope="col">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for balance in balances %}
+    <tr>
+      <td>{{ balance.from }}</td>
+      <td>{{ balance.to }}</td>
+      <td>{{ balance.value/100 }} €</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
+
+<br />
 
 <form method="POST" action="/activities/{{ activity.id }}">
   <button type="submit" class="btn btn-danger">
     Close Activity!
   </button>
 </form>
+<br />
+
 
 {% endblock %}

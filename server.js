@@ -199,21 +199,22 @@ app.get("/activities/:id",
     Promise.all([
       aqueries.getActivityDetails(request.params.id, pool),
       aqueries.getActivityAttendees(request.params.id,pool),
-      expensesService.getExpenses(request.params.id, pool)
+      expensesService.getExpenses(request.params.id, pool),
+      doTheBalance(request.params.id,pool)
     ])
       .then(function(promiseAllResult) {
+        console.log(promiseAllResult[3]);
         const user = request.user.rows[0];
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
           expenses : promiseAllResult[2].rows,
           attendee : promiseAllResult[1].rows,
-          user: user
+          user: user,
+          balances : promiseAllResult[3]
         });
       })
       .catch(err => console.warn(err));
   });
-
-
 
 app.post(
   "/activities/create",
@@ -353,28 +354,45 @@ const { createTransaction, payback } = require("./payback/payback.js");
 //
 // console.log(payback(transactions, ['Dubois', 'Durand', 'Martin', 'Michu']));
 
- // End of ayback algo test
+// End of ayback algo test
 
-expensesService.getExpenses("768971fa-5db2-40c8-9da0-d3bc98f7209b", pool)
-  .then(expenses => {
-    // console.log(expenses);
-    return Promise.all(
-      expenses.rows.map(expense => {
-        return expensesService.getExpense(expense.id, pool);
-      })
-    );
-  })
-  .then(arrayOfFullExpenses => arrayOfFullExpenses.map(expense => createTransaction(expense.name, expense.amount, expense.attendees.map(attendee => attendee.name))))
-  .then(res => console.log(payback(res, ["Dubois", "Bilal", "Joachim", "Jim"])))
+//
+// //  Balance implementation
+//
 
-  .catch(e => console.log(e));
+// app.post(
+//   "/activities/:id/balance",
+//   require("connect-ensure-login").ensureLoggedIn("/login"),
+//   function(request, result){
+//     Promise.all([
+//       aqueries.getActivityDetails(request.params.id, pool),
+//       aqueries.getActivityAttendees(request.params.id,pool),
+//       doTheBalance(request.params.id,pool)
+//     ])
+//       .then(
+//         result.redirect("/activities/"+ request.params.id)
+//       )
+//       .catch(e => console.log(e));
+//   }
+// );
 
-
-
-
-
-
-
+function doTheBalance(activityId,pool) {
+  return expensesService.getExpenses(activityId, pool)
+    .then(expenses => {
+      // console.log(expenses);
+      return Promise.all(
+        expenses.rows.map(expense => {
+          return expensesService.getExpense(expense.id, pool);
+        })
+      );
+    })
+    .then(arrayOfFullExpenses => arrayOfFullExpenses.map(expense => createTransaction(expense.name, expense.amount, expense.attendees.map(attendee => attendee.name))))
+    .then(res => {
+      return payback(res,res[0].creditors);
+    })
+    // .then(res => console.log(payback(res, ["Dubois", "Bilal", "Joachim", "Jim"])))
+    .catch(e => console.log(e));
+}
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {
