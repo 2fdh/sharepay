@@ -199,21 +199,22 @@ app.get("/activities/:id",
     Promise.all([
       aqueries.getActivityDetails(request.params.id, pool),
       aqueries.getActivityAttendees(request.params.id,pool),
-      expensesService.getExpenses(request.params.id, pool)
+      expensesService.getExpenses(request.params.id, pool),
+      doTheBalance(request.params.id,pool)
     ])
       .then(function(promiseAllResult) {
+        console.log(promiseAllResult[3]);
         const user = request.user.rows[0];
         result.render("expenses", {
           activity : promiseAllResult[0].rows[0],
           expenses : promiseAllResult[2].rows,
           attendee : promiseAllResult[1].rows,
-          user: user
+          user: user,
+          balances : promiseAllResult[3]
         });
       })
       .catch(err => console.warn(err));
   });
-
-
 
 app.post(
   "/activities/create",
@@ -307,6 +308,74 @@ app.get(
       })
       .catch(err => console.warn(err));
   });
+
+
+app.get(
+  "/activities/:activityid/expenses",
+  require("connect-ensure-login").ensureLoggedIn("/login"),
+  function(request, result){
+    Promise.all([
+      aqueries.getActivityDetails(request.params.activityid, pool),
+      aqueries.getActivityAttendees(request.params.activityid,pool),
+      expensesService.getExpenses(request.params.activityid, pool),
+    ])
+    .then(function(promiseAllResult) {
+      console.log(promiseAllResult[2]); //undefined
+      promiseAllResult[2].rows.id.map(createTransaction(getExpenseOwner(),10,getExpenseAttendees()));
+    })
+    .then(function(promiseAllResult) {
+        result.render("new_expenses", {
+          activity : promiseAllResult[0].rows[0],
+          attendee : promiseAllResult[1].rows,
+          expenses : promiseAllResult[2].rows
+        })
+      })
+  }
+)
+
+// How it works
+//
+// [expense1,expense2,expense3].map(createTransaction("expensedebitor",10,["attende1","attende2"]))
+//
+// [expenseBis1,expenseBis2,expenseBis3]
+//
+// payback([expenseBis1,expenseBis2,expenseBis3],["attende1","attende2"])
+//
+
+
+
+//  Payback algo test
+const { createTransaction, payback } = require("./payback/payback.js");
+// const expense1 = createTransaction("Durand",10,[ 'Dubois', 'Durand', 'Martin', 'Michu' ]);
+// const expense2 = createTransaction("Dubois",50,[ 'Dubois', 'Martin', 'Durand', 'Michu' ]);
+// const expense3 = createTransaction("Martin",20,[ 'Durand', 'Martin', 'Dubois', 'Michu' ]);
+// const expense4 = createTransaction("Michu",60,[ 'Dubois', 'Martin', 'Michu', 'Durand' ]);
+// const transactions = [expense1, expense2, expense3, expense4];
+//
+// console.log(payback(transactions, ['Dubois', 'Durand', 'Martin', 'Michu']));
+
+// End of ayback algo test
+
+
+
+
+function doTheBalance(activityId,pool) {
+  return expensesService.getExpenses(activityId, pool)
+    .then(expenses => {
+      // console.log(expenses);
+      return Promise.all(
+        expenses.rows.map(expense => {
+          return expensesService.getExpense(expense.id, pool);
+        })
+      );
+    })
+    .then(arrayOfFullExpenses => arrayOfFullExpenses.map(expense => createTransaction(expense.name, expense.amount, expense.attendees.map(attendee => attendee.name))))
+    .then(res => {
+      return payback(res,res[0].creditors);
+    })
+    // .then(res => console.log(payback(res, ["Dubois", "Bilal", "Joachim", "Jim"])))
+    .catch(e => console.log(e));
+}
 
 function isPgSslActive() {
   if (process.env.SSLPG === "false") {

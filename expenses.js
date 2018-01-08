@@ -9,11 +9,6 @@ function getExpenses(activityId, pool){
 }
 
 function createExpense(activityId, user, expenseForm, pool){
-  console.log(activityId);
-  console.log(user);
-  console.log(expenseForm);
-
-
   return pool.query(
     "INSERT INTO expenses (id, title, date, amount, activity_id, payer_id) VALUES ($1::uuid, $2::text, $3::date, $4::integer, $5::uuid, $6::uuid) RETURNING id",
     [uuidv4(), expenseForm.title, new Date(), expenseForm.amount.replace(/,/g, ".") * 100, activityId, expenseForm.debitor]
@@ -36,14 +31,16 @@ function getExpense(expenseId, pool){
     "SELECT e.id, e.title, e.date, e.amount, a.name FROM expenses e INNER JOIN attendees a ON (a.id = e.payer_id) WHERE e.id = $1::uuid",
     [expenseId]
   ).then(simpleExpense => {
-    getExpenseAttendees(expenseId, pool)
+    return getExpenseAttendees(expenseId, pool)
       .then(attendees => {
         const fullExpense = simpleExpense.rows[0];
         fullExpense.attendees = attendees.rows;
         return fullExpense;
-      });
+      })
+      .catch(e => console.log(e));
   }
-  );
+  )
+    .catch(e => console.log(e));
 }
 
 function getExpenseAttendees(expenseId, pool) {
