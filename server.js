@@ -335,7 +335,7 @@ app.get(
 
 
 //  Payback algo test
-const { createTransaction, payback } = require("./payback/payback.js");
+const { createTransaction, payback } = require("./payback.js");
 // const expense1 = createTransaction("Durand",10,[ 'Dubois', 'Durand', 'Martin', 'Michu' ]);
 // const expense2 = createTransaction("Dubois",50,[ 'Dubois', 'Martin', 'Durand', 'Michu' ]);
 // const expense3 = createTransaction("Martin",20,[ 'Durand', 'Martin', 'Dubois', 'Michu' ]);
