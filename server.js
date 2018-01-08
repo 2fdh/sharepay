@@ -356,25 +356,8 @@ const { createTransaction, payback } = require("./payback/payback.js");
 
 // End of ayback algo test
 
-//
-// //  Balance implementation
-//
 
-// app.post(
-//   "/activities/:id/balance",
-//   require("connect-ensure-login").ensureLoggedIn("/login"),
-//   function(request, result){
-//     Promise.all([
-//       aqueries.getActivityDetails(request.params.id, pool),
-//       aqueries.getActivityAttendees(request.params.id,pool),
-//       doTheBalance(request.params.id,pool)
-//     ])
-//       .then(
-//         result.redirect("/activities/"+ request.params.id)
-//       )
-//       .catch(e => console.log(e));
-//   }
-// );
+
 
 function doTheBalance(activityId,pool) {
   return expensesService.getExpenses(activityId, pool)

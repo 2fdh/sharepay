@@ -35,7 +35,7 @@ function createActivity(form, pool, user) {
     })
     .then(resObjActivityId => {
       return pool.query(
-          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id", [uuidv4(), user.name, user.login]
+          "INSERT INTO attendees VALUES ($1::uuid,$2::text,$3::text) RETURNING id", [uuidv4(), user.firstname + " " + user.name, user.login]
         )
         .then(resAttendeeId => {
           resObjActivityId.attendeeId = resAttendeeId.rows[0].id;
