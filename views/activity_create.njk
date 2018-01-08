@@ -20,24 +20,25 @@
   </div>
 
   <script type="text/javascript" >
-           const div = document.getElementById('attendee');
-           function addInput(name,style) {
-             const input = document.createElement("input");
-             input.name = name;
-             input.classList.add(style);
-             input.placeholder = "Attendee name";
-             input.required = "required";
-             div.appendChild(input);
-           }
-           function addField() {
-               addInput("attendee[]","form-control");
-               div.appendChild(document.createElement("br"));
-           }
+     const div = document.getElementById('attendee');
+     function addInput(name,style) {
+       const input = document.createElement("input");
+       input.name = name;
+       input.classList.add(style);
+       input.placeholder = "Attendee name";
+       input.required = "required";
+       div.appendChild(input);
+     }
+     function addField() {
+         addInput("attendee[]","form-control");
+         div.appendChild(document.createElement("br"));
+     }
    </script>
-   <div><button type="button" onclick="addField()" >Add Attendee</button></div>
+   <div><button type="button" class="btn btn-info  mb-4" onclick="addField()" >Add Attendee</button>
+   </div>
 
 
-  <button type="submit" class="btn btn-primary">
+  <button type="submit" class="btn btn-info">
     Create Activity!
   </button>
   </form>

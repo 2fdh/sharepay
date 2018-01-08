@@ -7,21 +7,32 @@
 </div>
 
 <a href="/activities/create">
-  <button type="button" class="btn btn-primary btn-lg btn-block">Create a new activity</button>
+  <button type="button" class="btn btn-info btn-lg btn-block">Create a new activity</button>
 </a>
 
 <h3>Your activities</h3>
-
+<div class="container">
+  <div class="row">
 {% for activity in activities %}
-<div class="card" style="width: 20rem;" id=card>
+<div class="col-sm-12 col-md-6 col-lg-4">
+<div class="card mb-3" id=card>
 <img class="card-img-top" src="https://images.unsplash.com/photo-1505906690561-4dc7060250b6?auto=format&fit=crop&w=1569&q=80" alt="Card image cap">
 <div class="card-body">
   <h4 class="card-title">{{activity.title}}</h4>
   <p class="card-text">{{Activity.description}}</p>
-  <a href="/activities/{{activity.id}}" class="btn btn-primary">See details</a>
+  <a href="/activities/{{activity.id}}" class="btn btn-info">Details</a>
+  <a href="/activities/{{activity.id}}/balance" class="btn btn-info">Check-out</a>
+  <form method="POST" action="/activities/{{ activity.id }}">
+    <button type="submit" class="btn btn-danger">
+      Close
+    </button>
+  </form>
+</div>
 </div>
 </div>
 {% endfor %}
+</div>
+</div>
 
 <br>
 <a href="/activities/history">

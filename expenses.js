@@ -36,7 +36,7 @@ function getExpense(expenseId, pool){
     "SELECT e.id, e.title, e.date, e.amount, a.name FROM expenses e INNER JOIN attendees a ON (a.id = e.payer_id) WHERE e.id = $1::uuid",
     [expenseId]
   ).then(simpleExpense => {
-    return getExpenseAttendees(expenseId, pool)
+    getExpenseAttendees(expenseId, pool)
       .then(attendees => {
         const fullExpense = simpleExpense.rows[0];
         fullExpense.attendees = attendees.rows;

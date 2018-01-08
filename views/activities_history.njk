@@ -1,11 +1,22 @@
 {% extends "layout.njk" %}
 
 {% block content %}
-
-  {% for activity in activities %}
-    <li>{{ activity.title }}</li>
-    <li>{{ activity.description }}</li>
+<h3>Your closed activities</h3>
+<div class="container">
+  <div class="row">
+{% for activity in activities %}
+<div class="col-sm-12 col-md-6 col-lg-4">
+<div class="card mb-3" id=card>
+<img class="card-img-top" style="-webkit-filter: grayscale(100%)" src="https://images.unsplash.com/photo-1505906690561-4dc7060250b6?auto=format&fit=crop&w=1569&q=80" alt="Card image cap">
+<div class="card-body">
+  <h4 class="card-title">{{activity.title}}</h4>
+  <p class="card-text">{{activity.description}}</p>
+  <a href="/activities/history/{{activity.activity_id}}" class="btn btn-info">Details</a>
+</div>
+</div>
+</div>
   {% endfor %}
-
+</div>
+</div>
 
 {% endblock %}

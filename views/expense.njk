@@ -20,7 +20,7 @@
 
   <label>attendees</label>
 
-  {% for attendee in expense.attendees %}
+  {% for attendee in attendees %}
   <div>
     <div>
       <input name="attendees[]" type="checkbox" id="customCheck1" value="{{attendee.id}}" disabled checked>
