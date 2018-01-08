@@ -333,16 +333,6 @@ app.get(
   }
 )
 
-// How it works
-//
-// [expense1,expense2,expense3].map(createTransaction("expensedebitor",10,["attende1","attende2"]))
-//
-// [expenseBis1,expenseBis2,expenseBis3]
-//
-// payback([expenseBis1,expenseBis2,expenseBis3],["attende1","attende2"])
-//
-
-
 
 //  Payback algo test
 const { createTransaction, payback } = require("./payback/payback.js");
